@@ -11,21 +11,24 @@
 struct IntuitionBase *IntuitionBase = NULL;
 
 void fDATIME(int *X, int *Y) {
-static int GOTX = 0, GOTY;
-	if(GOTX == 0) {
-		IntuitionBase = (struct IntuitionBase *)
-			OpenLibrary("intuition.library", INTUITIONREV);
-		if (IntuitionBase == NULL) {
-			printf("Can't open library.\n");
-			exit(FALSE);
-			}
-		CurrentTime(&GOTX, &GOTY);
-		CloseLibrary(IntuitionBase);
-		}
-	GOTY += 654321;
-	if(GOTY >= 1000000) {GOTX += 1; GOTY -= 1000000;}
-	*X = GOTX;
-	*Y = GOTY;
+  static int GOTX = 0, GOTY;
+  if (GOTX == 0) {
+    IntuitionBase =
+        (struct IntuitionBase *)OpenLibrary("intuition.library", INTUITIONREV);
+    if (IntuitionBase == NULL) {
+      printf("Can't open library.\n");
+      exit(FALSE);
+    }
+    CurrentTime(&GOTX, &GOTY);
+    CloseLibrary(IntuitionBase);
+  }
+  GOTY += 654321;
+  if (GOTY >= 1000000) {
+    GOTX += 1;
+    GOTY -= 1000000;
+  }
+  *X = GOTX;
+  *Y = GOTY;
 }
 #endif
 
@@ -34,10 +37,11 @@ static int GOTX = 0, GOTY;
 #include "time.h"
 
 void fDATIME(long *X, long *Y) {
-	time(X); time(Y);
-	*Y /= 2;
-	/* it would be even better if the two numbers were totally
-	 * unrelated, like if 'time' returned 64 bits of data */
+  time(X);
+  time(Y);
+  *Y /= 2;
+  /* it would be even better if the two numbers were totally
+   * unrelated, like if 'time' returned 64 bits of data */
 }
 #endif
 
@@ -45,17 +49,17 @@ void fDATIME(long *X, long *Y) {
 #if defined(_WIN32) || defined(_WIN64)
 #include <time.h>
 void fDATIME(long *X, long *Y) {
-	time_t now = time(NULL);
-	*X = (long)now;
-	*Y = 0;
+  time_t now = time(NULL);
+  *X = (long)now;
+  *Y = 0;
 }
 #else
 #include <sys/time.h>
 void fDATIME(long *X, long *Y) {
-	struct timeval now;
-	gettimeofday(&now, 0);
-	*X = now.tv_sec;
-	*Y = now.tv_usec;
+  struct timeval now;
+  gettimeofday(&now, 0);
+  *X = now.tv_sec;
+  *Y = now.tv_usec;
 }
 #endif
 #endif

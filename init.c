@@ -1,12 +1,12 @@
-#include "misc.h"
-#include "main.h"
-#include "share.h"
 #include "funcs.h"
+#include "main.h"
+#include "misc.h"
+#include "share.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-#define TRUE  (0==0)
-#define FALSE (0!=0)
+#define TRUE (0 == 0)
+#define FALSE (0 != 0)
 
 /*
  * INITIALISATION
@@ -30,7 +30,6 @@
  *	1000 NON-SYNONYMOUS VOCABULARY WORDS
  *	300 LOCATIONS
  *	100 OBJECTS */
-
 
 /*  DESCRIPTION OF THE DATABASE FORMAT
  *
@@ -173,196 +172,293 @@ static int finish_init(void);
 static int quick_io(void);
 
 int initialise(void) {
-	printf("Initialising...\n");
-	if(!quick_init()){raw_init(); report(); quick_save();}
-	finish_init();
-	return(0);
+  printf("Initialising...\n");
+  if (!quick_init()) {
+    raw_init();
+    report();
+    quick_save();
+  }
+  finish_init();
+  return (0);
 }
 
 static int raw_init(void) {
-	printf("Couldn't find adventure.data, using adventure.text...\n");
+  printf("Couldn't find adventure.data, using adventure.text...\n");
 
-/*  CLEAR OUT THE VARIOUS TEXT-POINTER ARRAYS.  ALL TEXT IS STORED IN ARRAY
- *  LINES; EACH LINE IS PRECEDED BY A WORD POINTING TO THE NEXT POINTER (I.E.
- *  THE WORD FOLLOWING THE END OF THE LINE).  THE POINTER IS NEGATIVE IF THIS IS
- *  FIRST LINE OF A MESSAGE.  THE TEXT-POINTER ARRAYS CONTAIN INDICES OF
- *  POINTER-WORDS IN LINES.  STEXT(N) IS SHORT DESCRIPTION OF LOCATION N.
- *  LTEXT(N) IS LONG DESCRIPTION.  PTEXT(N) POINTS TO MESSAGE FOR PROP(N)=0.
- *  SUCCESSIVE PROP MESSAGES ARE FOUND BY CHASING POINTERS.  RTEXT CONTAINS
- *  SECTION 6'S STUFF.  CTEXT(N) POINTS TO A PLAYER-CLASS MESSAGE.  TTEXT IS FOR
- *  SECTION 14.  WE ALSO CLEAR COND (SEE DESCRIPTION OF SECTION 9 FOR DETAILS). */
+  /*  CLEAR OUT THE VARIOUS TEXT-POINTER ARRAYS.  ALL TEXT IS STORED IN ARRAY
+   *  LINES; EACH LINE IS PRECEDED BY A WORD POINTING TO THE NEXT POINTER (I.E.
+   *  THE WORD FOLLOWING THE END OF THE LINE).  THE POINTER IS NEGATIVE IF THIS
+   * IS FIRST LINE OF A MESSAGE.  THE TEXT-POINTER ARRAYS CONTAIN INDICES OF
+   *  POINTER-WORDS IN LINES.  STEXT(N) IS SHORT DESCRIPTION OF LOCATION N.
+   *  LTEXT(N) IS LONG DESCRIPTION.  PTEXT(N) POINTS TO MESSAGE FOR PROP(N)=0.
+   *  SUCCESSIVE PROP MESSAGES ARE FOUND BY CHASING POINTERS.  RTEXT CONTAINS
+   *  SECTION 6'S STUFF.  CTEXT(N) POINTS TO A PLAYER-CLASS MESSAGE.  TTEXT IS
+   * FOR SECTION 14.  WE ALSO CLEAR COND (SEE DESCRIPTION OF SECTION 9 FOR
+   * DETAILS). */
 
-	/* 1001 */ for (I=1; I<=300; I++) {
-	if(I <= 100)PTEXT[I]=0;
-	if(I <= RTXSIZ)RTEXT[I]=0;
-	if(I <= CLSMAX)CTEXT[I]=0;
-	if(I <= 100)OBJSND[I]=0;
-	if(I <= 100)OBJTXT[I]=0;
-	if(I > LOCSIZ) goto L1001;
-	STEXT[I]=0;
-	LTEXT[I]=0;
-	COND[I]=0;
-	KEY[I]=0;
-	LOCSND[I]=0;
-L1001:	/*etc*/ ;
-	} /* end loop */
+  /* 1001 */ for (I = 1; I <= 300; I++) {
+    if (I <= 100)
+      PTEXT[I] = 0;
+    if (I <= RTXSIZ)
+      RTEXT[I] = 0;
+    if (I <= CLSMAX)
+      CTEXT[I] = 0;
+    if (I <= 100)
+      OBJSND[I] = 0;
+    if (I <= 100)
+      OBJTXT[I] = 0;
+    if (I > LOCSIZ)
+      goto L1001;
+    STEXT[I] = 0;
+    LTEXT[I] = 0;
+    COND[I] = 0;
+    KEY[I] = 0;
+    LOCSND[I] = 0;
+  L1001: /*etc*/;
+  } /* end loop */
 
-	LINUSE=1;
-	TRVS=1;
-	CLSSES=0;
-	TRNVLS=0;
+  LINUSE = 1;
+  TRVS = 1;
+  CLSSES = 0;
+  TRNVLS = 0;
 
-/*  START NEW DATA SECTION.  SECT IS THE SECTION NUMBER. */
+  /*  START NEW DATA SECTION.  SECT IS THE SECTION NUMBER. */
 
-L1002:	SECT=GETNUM(1);
-	OLDLOC= -1;
-	switch (SECT) { case 0: return(0); case 1: goto L1004; case 2: goto
-		L1004; case 3: goto L1030; case 4: goto L1040; case 5: goto L1004;
-		case 6: goto L1004; case 7: goto L1050; case 8: goto L1060; case
-		9: goto L1070; case 10: goto L1004; case 11: goto L1080; case 12:
-		break; case 13: goto L1090; case 14: goto L1004; }
-/*	      (0)  (1)  (2)  (3)  (4)  (5)  (6)  (7)  (8)  (9)
- *	     (10) (11) (12) (13) (14) */
-	BUG(9);
+L1002:
+  SECT = GETNUM(1);
+  OLDLOC = -1;
+  switch (SECT) {
+  case 0:
+    return (0);
+  case 1:
+    goto L1004;
+  case 2:
+    goto L1004;
+  case 3:
+    goto L1030;
+  case 4:
+    goto L1040;
+  case 5:
+    goto L1004;
+  case 6:
+    goto L1004;
+  case 7:
+    goto L1050;
+  case 8:
+    goto L1060;
+  case 9:
+    goto L1070;
+  case 10:
+    goto L1004;
+  case 11:
+    goto L1080;
+  case 12:
+    break;
+  case 13:
+    goto L1090;
+  case 14:
+    goto L1004;
+  }
+  /*	      (0)  (1)  (2)  (3)  (4)  (5)  (6)  (7)  (8)  (9)
+   *	     (10) (11) (12) (13) (14) */
+  BUG(9);
 
-/*  SECTIONS 1, 2, 5, 6, 10, 14.  READ MESSAGES AND SET UP POINTERS. */
+  /*  SECTIONS 1, 2, 5, 6, 10, 14.  READ MESSAGES AND SET UP POINTERS. */
 
-L1004:	KK=LINUSE;
-L1005:	LINUSE=KK;
-	LOC=GETNUM(1);
-	if(LNLENG >= LNPOSN+70)BUG(0);
-	if(LOC == -1) goto L1002;
-	if(LNLENG < LNPOSN)BUG(1);
-L1006:	KK=KK+1;
-	if(KK >= LINSIZ)BUG(2);
-	LINES[KK]=GETTXT(FALSE,FALSE,FALSE,KK);
-	if(LINES[KK] != -1) goto L1006;
-	LINES[LINUSE]=KK;
-	if(LOC == OLDLOC) goto L1005;
-	OLDLOC=LOC;
-	LINES[LINUSE]= -KK;
-	if(SECT == 14) goto L1014;
-	if(SECT == 10) goto L1012;
-	if(SECT == 6) goto L1011;
-	if(SECT == 5) goto L1010;
-	if(LOC > LOCSIZ)BUG(10);
-	if(SECT == 1) goto L1008;
+L1004:
+  KK = LINUSE;
+L1005:
+  LINUSE = KK;
+  LOC = GETNUM(1);
+  if (LNLENG >= LNPOSN + 70)
+    BUG(0);
+  if (LOC == -1)
+    goto L1002;
+  if (LNLENG < LNPOSN)
+    BUG(1);
+L1006:
+  KK = KK + 1;
+  if (KK >= LINSIZ)
+    BUG(2);
+  LINES[KK] = GETTXT(FALSE, FALSE, FALSE, KK);
+  if (LINES[KK] != -1)
+    goto L1006;
+  LINES[LINUSE] = KK;
+  if (LOC == OLDLOC)
+    goto L1005;
+  OLDLOC = LOC;
+  LINES[LINUSE] = -KK;
+  if (SECT == 14)
+    goto L1014;
+  if (SECT == 10)
+    goto L1012;
+  if (SECT == 6)
+    goto L1011;
+  if (SECT == 5)
+    goto L1010;
+  if (LOC > LOCSIZ)
+    BUG(10);
+  if (SECT == 1)
+    goto L1008;
 
-	STEXT[LOC]=LINUSE;
-	 goto L1005;
+  STEXT[LOC] = LINUSE;
+  goto L1005;
 
-L1008:	LTEXT[LOC]=LINUSE;
-	 goto L1005;
+L1008:
+  LTEXT[LOC] = LINUSE;
+  goto L1005;
 
-L1010:	if(LOC > 0 && LOC <= 100)PTEXT[LOC]=LINUSE;
-	 goto L1005;
+L1010:
+  if (LOC > 0 && LOC <= 100)
+    PTEXT[LOC] = LINUSE;
+  goto L1005;
 
-L1011:	if(LOC > RTXSIZ)BUG(6);
-	RTEXT[LOC]=LINUSE;
-	 goto L1005;
+L1011:
+  if (LOC > RTXSIZ)
+    BUG(6);
+  RTEXT[LOC] = LINUSE;
+  goto L1005;
 
-L1012:	CLSSES=CLSSES+1;
-	if(CLSSES > CLSMAX)BUG(11);
-	CTEXT[CLSSES]=LINUSE;
-	CVAL[CLSSES]=LOC;
-	 goto L1005;
+L1012:
+  CLSSES = CLSSES + 1;
+  if (CLSSES > CLSMAX)
+    BUG(11);
+  CTEXT[CLSSES] = LINUSE;
+  CVAL[CLSSES] = LOC;
+  goto L1005;
 
-L1014:	TRNVLS=TRNVLS+1;
-	if(TRNVLS > TRNSIZ)BUG(11);
-	TTEXT[TRNVLS]=LINUSE;
-	TRNVAL[TRNVLS]=LOC;
-	 goto L1005;
+L1014:
+  TRNVLS = TRNVLS + 1;
+  if (TRNVLS > TRNSIZ)
+    BUG(11);
+  TTEXT[TRNVLS] = LINUSE;
+  TRNVAL[TRNVLS] = LOC;
+  goto L1005;
 
-/*  THE STUFF FOR SECTION 3 IS ENCODED HERE.  EACH "FROM-LOCATION" GETS A
- *  CONTIGUOUS SECTION OF THE "TRAVEL" ARRAY.  EACH ENTRY IN TRAVEL IS
- *  NEWLOC*1000 + KEYWORD (FROM SECTION 4, MOTION VERBS), AND IS NEGATED IF
- *  THIS IS THE LAST ENTRY FOR THIS LOCATION.  KEY(N) IS THE INDEX IN TRAVEL
- *  OF THE FIRST OPTION AT LOCATION N. */
+  /*  THE STUFF FOR SECTION 3 IS ENCODED HERE.  EACH "FROM-LOCATION" GETS A
+   *  CONTIGUOUS SECTION OF THE "TRAVEL" ARRAY.  EACH ENTRY IN TRAVEL IS
+   *  NEWLOC*1000 + KEYWORD (FROM SECTION 4, MOTION VERBS), AND IS NEGATED IF
+   *  THIS IS THE LAST ENTRY FOR THIS LOCATION.  KEY(N) IS THE INDEX IN TRAVEL
+   *  OF THE FIRST OPTION AT LOCATION N. */
 
-L1030:	LOC=GETNUM(1);
-	if(LOC == -1) goto L1002;
-	NEWLOC=GETNUM(0);
-	if(KEY[LOC] != 0) goto L1033;
-	KEY[LOC]=TRVS;
-	 goto L1035;
-L1033:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
-L1035:	L=GETNUM(0);
-	if(L == 0) goto L1039;
-	TRAVEL[TRVS]=NEWLOC*1000+L;
-	TRVS=TRVS+1;
-	if(TRVS == TRVSIZ)BUG(3);
-	 goto L1035;
-L1039:	TRVS--; TRAVEL[TRVS]= -TRAVEL[TRVS]; TRVS++;
-	 goto L1030;
+L1030:
+  LOC = GETNUM(1);
+  if (LOC == -1)
+    goto L1002;
+  NEWLOC = GETNUM(0);
+  if (KEY[LOC] != 0)
+    goto L1033;
+  KEY[LOC] = TRVS;
+  goto L1035;
+L1033:
+  TRVS--;
+  TRAVEL[TRVS] = -TRAVEL[TRVS];
+  TRVS++;
+L1035:
+  L = GETNUM(0);
+  if (L == 0)
+    goto L1039;
+  TRAVEL[TRVS] = NEWLOC * 1000 + L;
+  TRVS = TRVS + 1;
+  if (TRVS == TRVSIZ)
+    BUG(3);
+  goto L1035;
+L1039:
+  TRVS--;
+  TRAVEL[TRVS] = -TRAVEL[TRVS];
+  TRVS++;
+  goto L1030;
 
-/*  HERE WE READ IN THE VOCABULARY.  KTAB(N) IS THE WORD NUMBER, ATAB(N) IS
- *  THE CORRESPONDING WORD.  THE -1 AT THE END OF SECTION 4 IS LEFT IN KTAB
- *  AS AN END-MARKER.  THE WORDS ARE GIVEN A MINIMAL HASH TO MAKE DECIPHERING
- *  THE CORE-IMAGE HARDER.  (WE DON'T USE GETTXT'S HASH SINCE THAT WOULD FORCE
- *  US TO HASH EACH INPUT LINE TO MAKE COMPARISONS WORK, AND THAT IN TURN
- *  WOULD MAKE IT HARDER TO DETECT PARTICULAR INPUT WORDS.) */
+  /*  HERE WE READ IN THE VOCABULARY.  KTAB(N) IS THE WORD NUMBER, ATAB(N) IS
+   *  THE CORRESPONDING WORD.  THE -1 AT THE END OF SECTION 4 IS LEFT IN KTAB
+   *  AS AN END-MARKER.  THE WORDS ARE GIVEN A MINIMAL HASH TO MAKE DECIPHERING
+   *  THE CORE-IMAGE HARDER.  (WE DON'T USE GETTXT'S HASH SINCE THAT WOULD FORCE
+   *  US TO HASH EACH INPUT LINE TO MAKE COMPARISONS WORK, AND THAT IN TURN
+   *  WOULD MAKE IT HARDER TO DETECT PARTICULAR INPUT WORDS.) */
 
-L1040:	J=10000;
-	/* 1042 */ for (TABNDX=1; TABNDX<=TABSIZ; TABNDX++) {
-L1043:	KTAB[TABNDX]=GETNUM(1);
-	if(KTAB[TABNDX] == -1) goto L1002;
-	J=J+7;
-L1042:	ATAB[TABNDX]=GETTXT(TRUE,TRUE,TRUE,0)+J*J;
-	} /* end loop */
-	BUG(4);
+L1040:
+  J = 10000;
+  /* 1042 */ for (TABNDX = 1; TABNDX <= TABSIZ; TABNDX++) {
+  L1043:
+    KTAB[TABNDX] = GETNUM(1);
+    if (KTAB[TABNDX] == -1)
+      goto L1002;
+    J = J + 7;
+  L1042:
+    ATAB[TABNDX] = GETTXT(TRUE, TRUE, TRUE, 0) + J * J;
+  } /* end loop */
+  BUG(4);
 
-/*  READ IN THE INITIAL LOCATIONS FOR EACH OBJECT.  ALSO THE IMMOVABILITY INFO.
- *  PLAC CONTAINS INITIAL LOCATIONS OF OBJECTS.  FIXD IS -1 FOR IMMOVABLE
- *  OBJECTS (INCLUDING THE SNAKE), OR = SECOND LOC FOR TWO-PLACED OBJECTS. */
+  /*  READ IN THE INITIAL LOCATIONS FOR EACH OBJECT.  ALSO THE IMMOVABILITY
+   * INFO. PLAC CONTAINS INITIAL LOCATIONS OF OBJECTS.  FIXD IS -1 FOR IMMOVABLE
+   *  OBJECTS (INCLUDING THE SNAKE), OR = SECOND LOC FOR TWO-PLACED OBJECTS. */
 
-L1050:	OBJ=GETNUM(1);
-	if(OBJ == -1) goto L1002;
-	PLAC[OBJ]=GETNUM(0);
-	FIXD[OBJ]=GETNUM(0);
-	 goto L1050;
+L1050:
+  OBJ = GETNUM(1);
+  if (OBJ == -1)
+    goto L1002;
+  PLAC[OBJ] = GETNUM(0);
+  FIXD[OBJ] = GETNUM(0);
+  goto L1050;
 
-/*  READ DEFAULT MESSAGE NUMBERS FOR ACTION VERBS, STORE IN ACTSPK. */
+  /*  READ DEFAULT MESSAGE NUMBERS FOR ACTION VERBS, STORE IN ACTSPK. */
 
-L1060:	VERB=GETNUM(1);
-	if(VERB == -1) goto L1002;
-	ACTSPK[VERB]=GETNUM(0);
-	 goto L1060;
+L1060:
+  VERB = GETNUM(1);
+  if (VERB == -1)
+    goto L1002;
+  ACTSPK[VERB] = GETNUM(0);
+  goto L1060;
 
-/*  READ INFO ABOUT AVAILABLE LIQUIDS AND OTHER CONDITIONS, STORE IN COND. */
+  /*  READ INFO ABOUT AVAILABLE LIQUIDS AND OTHER CONDITIONS, STORE IN COND. */
 
-L1070:	K=GETNUM(1);
-	if(K == -1) goto L1002;
-L1071:	LOC=GETNUM(0);
-	if(LOC == 0) goto L1070;
-	if(CNDBIT(LOC,K)) BUG(8);
-	COND[LOC]=COND[LOC]+SETBIT(K);
-	 goto L1071;
+L1070:
+  K = GETNUM(1);
+  if (K == -1)
+    goto L1002;
+L1071:
+  LOC = GETNUM(0);
+  if (LOC == 0)
+    goto L1070;
+  if (CNDBIT(LOC, K))
+    BUG(8);
+  COND[LOC] = COND[LOC] + SETBIT(K);
+  goto L1071;
 
-/*  READ DATA FOR HINTS. */
+  /*  READ DATA FOR HINTS. */
 
-L1080:	HNTMAX=0;
-L1081:	K=GETNUM(1);
-	if(K == -1) goto L1002;
-	if(K <= 0 || K > HNTSIZ)BUG(7);
-	/* 1083 */ for (I=1; I<=4; I++) {
-L1083:	HINTS[K][I] =GETNUM(0);
-	} /* end loop */
-	HNTMAX=(HNTMAX>K ? HNTMAX : K);
-	 goto L1081;
+L1080:
+  HNTMAX = 0;
+L1081:
+  K = GETNUM(1);
+  if (K == -1)
+    goto L1002;
+  if (K <= 0 || K > HNTSIZ)
+    BUG(7);
+  /* 1083 */ for (I = 1; I <= 4; I++) {
+  L1083:
+    HINTS[K][I] = GETNUM(0);
+  } /* end loop */
+  HNTMAX = (HNTMAX > K ? HNTMAX : K);
+  goto L1081;
 
-/*  READ THE SOUND/TEXT INFO, STORE IN OBJSND, OBJTXT, LOCSND. */
+  /*  READ THE SOUND/TEXT INFO, STORE IN OBJSND, OBJTXT, LOCSND. */
 
-L1090:	K=GETNUM(1);
-	if(K == -1) goto L1002;
-	KK=GETNUM(0);
-	I=GETNUM(0);
-	if(I == 0) goto L1092;
-	OBJSND[K]=(KK>0 ? KK : 0);
-	OBJTXT[K]=(I>0 ? I : 0);
-	 goto L1090;
+L1090:
+  K = GETNUM(1);
+  if (K == -1)
+    goto L1002;
+  KK = GETNUM(0);
+  I = GETNUM(0);
+  if (I == 0)
+    goto L1092;
+  OBJSND[K] = (KK > 0 ? KK : 0);
+  OBJTXT[K] = (I > 0 ? I : 0);
+  goto L1090;
 
-L1092:	LOCSND[K]=KK;
-	 goto L1090;
+L1092:
+  LOCSND[K] = KK;
+  goto L1090;
 }
 
 /*  FINISH CONSTRUCTING INTERNAL DATA FORMAT */
@@ -376,343 +472,384 @@ L1092:	LOCSND[K]=KK;
  *  DESCRIPTION IS PRINTED.  COUNTS MOD 5 UNLESS "LOOK" IS USED. */
 
 static int finish_init(void) {
-	/* 1101 */ for (I=1; I<=100; I++) {
-	PLACE[I]=0;
-	PROP[I]=0;
-	LINK[I]=0;
-L1101:	{long x = I+100; LINK[x]=0;}
-	} /* end loop */
+  /* 1101 */ for (I = 1; I <= 100; I++) {
+    PLACE[I] = 0;
+    PROP[I] = 0;
+    LINK[I] = 0;
+  L1101: {
+    long x = I + 100;
+    LINK[x] = 0;
+  }
+  } /* end loop */
 
-	/* 1102 */ for (I=1; I<=LOCSIZ; I++) {
-	ABB[I]=0;
-	if(LTEXT[I] == 0 || KEY[I] == 0) goto L1102;
-	K=KEY[I];
-	if(MOD(IABS(TRAVEL[K]),1000) == 1)COND[I]=2;
-L1102:	ATLOC[I]=0;
-	} /* end loop */
+  /* 1102 */ for (I = 1; I <= LOCSIZ; I++) {
+    ABB[I] = 0;
+    if (LTEXT[I] == 0 || KEY[I] == 0)
+      goto L1102;
+    K = KEY[I];
+    if (MOD(IABS(TRAVEL[K]), 1000) == 1)
+      COND[I] = 2;
+  L1102:
+    ATLOC[I] = 0;
+  } /* end loop */
 
-/*  SET UP THE ATLOC AND LINK ARRAYS AS DESCRIBED ABOVE.  WE'LL USE THE DROP
- *  SUBROUTINE, WHICH PREFACES NEW OBJECTS ON THE LISTS.  SINCE WE WANT THINGS
- *  IN THE OTHER ORDER, WE'LL RUN THE LOOP BACKWARDS.  IF THE OBJECT IS IN TWO
- *  LOCS, WE DROP IT TWICE.  THIS ALSO SETS UP "PLACE" AND "FIXED" AS COPIES OF
- *  "PLAC" AND "FIXD".  ALSO, SINCE TWO-PLACED OBJECTS ARE TYPICALLY BEST
- *  DESCRIBED LAST, WE'LL DROP THEM FIRST. */
+  /*  SET UP THE ATLOC AND LINK ARRAYS AS DESCRIBED ABOVE.  WE'LL USE THE DROP
+   *  SUBROUTINE, WHICH PREFACES NEW OBJECTS ON THE LISTS.  SINCE WE WANT THINGS
+   *  IN THE OTHER ORDER, WE'LL RUN THE LOOP BACKWARDS.  IF THE OBJECT IS IN TWO
+   *  LOCS, WE DROP IT TWICE.  THIS ALSO SETS UP "PLACE" AND "FIXED" AS COPIES
+   * OF "PLAC" AND "FIXD".  ALSO, SINCE TWO-PLACED OBJECTS ARE TYPICALLY BEST
+   *  DESCRIBED LAST, WE'LL DROP THEM FIRST. */
 
-	/* 1106 */ for (I=1; I<=100; I++) {
-	K=101-I;
-	if(FIXD[K] <= 0) goto L1106;
-	DROP(K+100,FIXD[K]);
-	DROP(K,PLAC[K]);
-L1106:	/*etc*/ ;
-	} /* end loop */
+  /* 1106 */ for (I = 1; I <= 100; I++) {
+    K = 101 - I;
+    if (FIXD[K] <= 0)
+      goto L1106;
+    DROP(K + 100, FIXD[K]);
+    DROP(K, PLAC[K]);
+  L1106: /*etc*/;
+  } /* end loop */
 
-	/* 1107 */ for (I=1; I<=100; I++) {
-	K=101-I;
-	FIXED[K]=FIXD[K];
-L1107:	if(PLAC[K] != 0 && FIXD[K] <= 0)DROP(K,PLAC[K]);
-	} /* end loop */
+  /* 1107 */ for (I = 1; I <= 100; I++) {
+    K = 101 - I;
+    FIXED[K] = FIXD[K];
+  L1107:
+    if (PLAC[K] != 0 && FIXD[K] <= 0)
+      DROP(K, PLAC[K]);
+  } /* end loop */
 
-/*  TREASURES, AS NOTED EARLIER, ARE OBJECTS 50 THROUGH MAXTRS (CURRENTLY 79).
- *  THEIR PROPS ARE INITIALLY -1, AND ARE SET TO 0 THE FIRST TIME THEY ARE
- *  DESCRIBED.  TALLY KEEPS TRACK OF HOW MANY ARE NOT YET FOUND, SO WE KNOW
- *  WHEN TO CLOSE THE CAVE. */
+  /*  TREASURES, AS NOTED EARLIER, ARE OBJECTS 50 THROUGH MAXTRS (CURRENTLY 79).
+   *  THEIR PROPS ARE INITIALLY -1, AND ARE SET TO 0 THE FIRST TIME THEY ARE
+   *  DESCRIBED.  TALLY KEEPS TRACK OF HOW MANY ARE NOT YET FOUND, SO WE KNOW
+   *  WHEN TO CLOSE THE CAVE. */
 
-	MAXTRS=79;
-	TALLY=0;
-	/* 1200 */ for (I=50; I<=MAXTRS; I++) {
-	if(PTEXT[I] != 0)PROP[I]= -1;
-L1200:	TALLY=TALLY-PROP[I];
-	} /* end loop */
+  MAXTRS = 79;
+  TALLY = 0;
+  /* 1200 */ for (I = 50; I <= MAXTRS; I++) {
+    if (PTEXT[I] != 0)
+      PROP[I] = -1;
+  L1200:
+    TALLY = TALLY - PROP[I];
+  } /* end loop */
 
-/*  CLEAR THE HINT STUFF.  HINTLC(I) IS HOW LONG HE'S BEEN AT LOC WITH COND BIT
- *  I.  HINTED(I) IS TRUE IFF HINT I HAS BEEN USED. */
+  /*  CLEAR THE HINT STUFF.  HINTLC(I) IS HOW LONG HE'S BEEN AT LOC WITH COND
+   * BIT I.  HINTED(I) IS TRUE IFF HINT I HAS BEEN USED. */
 
-	/* 1300 */ for (I=1; I<=HNTMAX; I++) {
-	HINTED[I]=FALSE;
-L1300:	HINTLC[I]=0;
-	} /* end loop */
+  /* 1300 */ for (I = 1; I <= HNTMAX; I++) {
+    HINTED[I] = FALSE;
+  L1300:
+    HINTLC[I] = 0;
+  } /* end loop */
 
-/*  DEFINE SOME HANDY MNEMONICS.  THESE CORRESPOND TO OBJECT NUMBERS. */
+  /*  DEFINE SOME HANDY MNEMONICS.  THESE CORRESPOND TO OBJECT NUMBERS. */
 
-	AXE=VOCWRD(12405,1);
-	BATTER=VOCWRD(201202005,1);
-	BEAR=VOCWRD(2050118,1);
-	BIRD=VOCWRD(2091804,1);
-	BLOOD=VOCWRD(212151504,1);
-	BOTTLE=VOCWRD(215202012,1);
-	CAGE=VOCWRD(3010705,1);
-	CAVITY=VOCWRD(301220920,1);
-	CHASM=VOCWRD(308011913,1);
-	CLAM=VOCWRD(3120113,1);
-	DOOR=VOCWRD(4151518,1);
-	DRAGON=VOCWRD(418010715,1);
-	DWARF=VOCWRD(423011806,1);
-	FISSUR=VOCWRD(609191921,1);
-	FOOD=VOCWRD(6151504,1);
-	GRATE=VOCWRD(718012005,1);
-	KEYS=VOCWRD(11052519,1);
-	KNIFE=VOCWRD(1114090605,1);
-	LAMP=VOCWRD(12011316,1);
-	MAGZIN=VOCWRD(1301070126,1);
-	MESSAG=VOCWRD(1305191901,1);
-	MIRROR=VOCWRD(1309181815,1);
-	OGRE=VOCWRD(15071805,1);
-	OIL=VOCWRD(150912,1);
-	OYSTER=VOCWRD(1525192005,1);
-	PILLOW=VOCWRD(1609121215,1);
-	PLANT=VOCWRD(1612011420,1);
-	PLANT2=PLANT+1;
-	RESER=VOCWRD(1805190518,1);
-	ROD=VOCWRD(181504,1);
-	ROD2=ROD+1;
-	SIGN=VOCWRD(19090714,1);
-	SNAKE=VOCWRD(1914011105,1);
-	STEPS=VOCWRD(1920051619,1);
-	TROLL=VOCWRD(2018151212,1);
-	TROLL2=TROLL+1;
-	URN=VOCWRD(211814,1);
-	VEND=VOCWRD(1755140409,1);
-	VOLCAN=VOCWRD(1765120301,1);
-	WATER=VOCWRD(1851200518,1);
+  AXE = VOCWRD(12405, 1);
+  BATTER = VOCWRD(201202005, 1);
+  BEAR = VOCWRD(2050118, 1);
+  BIRD = VOCWRD(2091804, 1);
+  BLOOD = VOCWRD(212151504, 1);
+  BOTTLE = VOCWRD(215202012, 1);
+  CAGE = VOCWRD(3010705, 1);
+  CAVITY = VOCWRD(301220920, 1);
+  CHASM = VOCWRD(308011913, 1);
+  CLAM = VOCWRD(3120113, 1);
+  DOOR = VOCWRD(4151518, 1);
+  DRAGON = VOCWRD(418010715, 1);
+  DWARF = VOCWRD(423011806, 1);
+  FISSUR = VOCWRD(609191921, 1);
+  FOOD = VOCWRD(6151504, 1);
+  GRATE = VOCWRD(718012005, 1);
+  KEYS = VOCWRD(11052519, 1);
+  KNIFE = VOCWRD(1114090605, 1);
+  LAMP = VOCWRD(12011316, 1);
+  MAGZIN = VOCWRD(1301070126, 1);
+  MESSAG = VOCWRD(1305191901, 1);
+  MIRROR = VOCWRD(1309181815, 1);
+  OGRE = VOCWRD(15071805, 1);
+  OIL = VOCWRD(150912, 1);
+  OYSTER = VOCWRD(1525192005, 1);
+  PILLOW = VOCWRD(1609121215, 1);
+  PLANT = VOCWRD(1612011420, 1);
+  PLANT2 = PLANT + 1;
+  RESER = VOCWRD(1805190518, 1);
+  ROD = VOCWRD(181504, 1);
+  ROD2 = ROD + 1;
+  SIGN = VOCWRD(19090714, 1);
+  SNAKE = VOCWRD(1914011105, 1);
+  STEPS = VOCWRD(1920051619, 1);
+  TROLL = VOCWRD(2018151212, 1);
+  TROLL2 = TROLL + 1;
+  URN = VOCWRD(211814, 1);
+  VEND = VOCWRD(1755140409, 1);
+  VOLCAN = VOCWRD(1765120301, 1);
+  WATER = VOCWRD(1851200518, 1);
 
-/*  OBJECTS FROM 50 THROUGH WHATEVER ARE TREASURES.  HERE ARE A FEW. */
+  /*  OBJECTS FROM 50 THROUGH WHATEVER ARE TREASURES.  HERE ARE A FEW. */
 
-	AMBER=VOCWRD(113020518,1);
-	CHAIN=VOCWRD(308010914,1);
-	CHEST=VOCWRD(308051920,1);
-	COINS=VOCWRD(315091419,1);
-	EGGS=VOCWRD(5070719,1);
-	EMRALD=VOCWRD(513051801,1);
-	JADE=VOCWRD(10010405,1);
-	NUGGET=VOCWRD(7151204,1);
-	PEARL=VOCWRD(1605011812,1);
-	PYRAM=VOCWRD(1625180113,1);
-	RUBY=VOCWRD(18210225,1);
-	RUG=VOCWRD(182107,1);
-	SAPPH=VOCWRD(1901161608,1);
-	TRIDNT=VOCWRD(2018090405,1);
-	VASE=VOCWRD(22011905,1);
+  AMBER = VOCWRD(113020518, 1);
+  CHAIN = VOCWRD(308010914, 1);
+  CHEST = VOCWRD(308051920, 1);
+  COINS = VOCWRD(315091419, 1);
+  EGGS = VOCWRD(5070719, 1);
+  EMRALD = VOCWRD(513051801, 1);
+  JADE = VOCWRD(10010405, 1);
+  NUGGET = VOCWRD(7151204, 1);
+  PEARL = VOCWRD(1605011812, 1);
+  PYRAM = VOCWRD(1625180113, 1);
+  RUBY = VOCWRD(18210225, 1);
+  RUG = VOCWRD(182107, 1);
+  SAPPH = VOCWRD(1901161608, 1);
+  TRIDNT = VOCWRD(2018090405, 1);
+  VASE = VOCWRD(22011905, 1);
 
-/*  THESE ARE MOTION-VERB NUMBERS. */
+  /*  THESE ARE MOTION-VERB NUMBERS. */
 
-	BACK=VOCWRD(2010311,0);
-	CAVE=VOCWRD(3012205,0);
-	DPRSSN=VOCWRD(405161805,0);
-	ENTER=VOCWRD(514200518,0);
-	ENTRNC=VOCWRD(514201801,0);
-	LOOK=VOCWRD(12151511,0);
-	NUL=VOCWRD(14211212,0);
-	STREAM=VOCWRD(1920180501,0);
+  BACK = VOCWRD(2010311, 0);
+  CAVE = VOCWRD(3012205, 0);
+  DPRSSN = VOCWRD(405161805, 0);
+  ENTER = VOCWRD(514200518, 0);
+  ENTRNC = VOCWRD(514201801, 0);
+  LOOK = VOCWRD(12151511, 0);
+  NUL = VOCWRD(14211212, 0);
+  STREAM = VOCWRD(1920180501, 0);
 
-/*  AND SOME ACTION VERBS. */
+  /*  AND SOME ACTION VERBS. */
 
-	FIND=VOCWRD(6091404,2);
-	INVENT=VOCWRD(914220514,2);
-	LOCK=VOCWRD(12150311,2);
-	SAY=VOCWRD(190125,2);
-	THROW=VOCWRD(2008181523,2);
+  FIND = VOCWRD(6091404, 2);
+  INVENT = VOCWRD(914220514, 2);
+  LOCK = VOCWRD(12150311, 2);
+  SAY = VOCWRD(190125, 2);
+  THROW = VOCWRD(2008181523, 2);
 
-/*  INITIALISE THE DWARVES.  DLOC IS LOC OF DWARVES, HARD-WIRED IN.  ODLOC IS
- *  PRIOR LOC OF EACH DWARF, INITIALLY GARBAGE.  DALTLC IS ALTERNATE INITIAL LOC
- *  FOR DWARF, IN CASE ONE OF THEM STARTS OUT ON TOP OF THE ADVENTURER.  (NO 2
- *  OF THE 5 INITIAL LOCS ARE ADJACENT.)  DSEEN IS TRUE IF DWARF HAS SEEN HIM.
- *  DFLAG CONTROLS THE LEVEL OF ACTIVATION OF ALL THIS:
- *	0	NO DWARF STUFF YET (WAIT UNTIL REACHES HALL OF MISTS)
- *	1	REACHED HALL OF MISTS, BUT HASN'T MET FIRST DWARF
- *	2	MET FIRST DWARF, OTHERS START MOVING, NO KNIVES THROWN YET
- *	3	A KNIFE HAS BEEN THROWN (FIRST SET ALWAYS MISSES)
- *	3+	DWARVES ARE MAD (INCREASES THEIR ACCURACY)
- *  SIXTH DWARF IS SPECIAL (THE PIRATE).  HE ALWAYS STARTS AT HIS CHEST'S
- *  EVENTUAL LOCATION INSIDE THE MAZE.  THIS LOC IS SAVED IN CHLOC FOR REF.
- *  THE DEAD END IN THE OTHER MAZE HAS ITS LOC STORED IN CHLOC2. */
+  /*  INITIALISE THE DWARVES.  DLOC IS LOC OF DWARVES, HARD-WIRED IN.  ODLOC IS
+   *  PRIOR LOC OF EACH DWARF, INITIALLY GARBAGE.  DALTLC IS ALTERNATE INITIAL
+   * LOC FOR DWARF, IN CASE ONE OF THEM STARTS OUT ON TOP OF THE ADVENTURER.
+   * (NO 2 OF THE 5 INITIAL LOCS ARE ADJACENT.)  DSEEN IS TRUE IF DWARF HAS SEEN
+   * HIM. DFLAG CONTROLS THE LEVEL OF ACTIVATION OF ALL THIS: 0	NO DWARF STUFF
+   * YET (WAIT UNTIL REACHES HALL OF MISTS) 1	REACHED HALL OF MISTS, BUT
+   * HASN'T MET FIRST DWARF 2	MET FIRST DWARF, OTHERS START MOVING, NO KNIVES
+   * THROWN YET 3	A KNIFE HAS BEEN THROWN (FIRST SET ALWAYS MISSES) 3+
+   *	DWARVES ARE MAD (INCREASES THEIR ACCURACY) SIXTH DWARF IS SPECIAL (THE
+   * PIRATE).  HE ALWAYS STARTS AT HIS CHEST'S EVENTUAL LOCATION INSIDE THE
+   * MAZE.  THIS LOC IS SAVED IN CHLOC FOR REF. THE DEAD END IN THE OTHER MAZE
+   * HAS ITS LOC STORED IN CHLOC2. */
 
-	CHLOC=114;
-	CHLOC2=140;
-	/* 1700 */ for (I=1; I<=6; I++) {
-L1700:	DSEEN[I]=FALSE;
-	} /* end loop */
-	DFLAG=0;
-	DLOC[1]=19;
-	DLOC[2]=27;
-	DLOC[3]=33;
-	DLOC[4]=44;
-	DLOC[5]=64;
-	DLOC[6]=CHLOC;
-	DALTLC=18;
+  CHLOC = 114;
+  CHLOC2 = 140;
+  /* 1700 */ for (I = 1; I <= 6; I++) {
+  L1700:
+    DSEEN[I] = FALSE;
+  } /* end loop */
+  DFLAG = 0;
+  DLOC[1] = 19;
+  DLOC[2] = 27;
+  DLOC[3] = 33;
+  DLOC[4] = 44;
+  DLOC[5] = 64;
+  DLOC[6] = CHLOC;
+  DALTLC = 18;
 
-/*  OTHER RANDOM FLAGS AND COUNTERS, AS FOLLOWS:
- *	ABBNUM	HOW OFTEN WE SHOULD PRINT NON-ABBREVIATED DESCRIPTIONS
- *	BONUS	USED TO DETERMINE AMOUNT OF BONUS IF HE REACHES CLOSING
- *	CLOCK1	NUMBER OF TURNS FROM FINDING LAST TREASURE TILL CLOSING
- *	CLOCK2	NUMBER OF TURNS FROM FIRST WARNING TILL BLINDING FLASH
- *	CONDS	MIN VALUE FOR COND(LOC) IF LOC HAS ANY HINTS
- *	DETAIL	HOW OFTEN WE'VE SAID "NOT ALLOWED TO GIVE MORE DETAIL"
- *	DKILL	NUMBER OF DWARVES KILLED (UNUSED IN SCORING, NEEDED FOR MSG)
- *	FOOBAR	CURRENT PROGRESS IN SAYING "FEE FIE FOE FOO".
- *	HOLDNG	NUMBER OF OBJECTS BEING CARRIED
- *	IGO	HOW MANY TIMES HE'S SAID "GO XXX" INSTEAD OF "XXX"
- *	IWEST	HOW MANY TIMES HE'S SAID "WEST" INSTEAD OF "W"
- *	KNFLOC	0 IF NO KNIFE HERE, LOC IF KNIFE HERE, -1 AFTER CAVEAT
- *	LIMIT	LIFETIME OF LAMP (NOT SET HERE)
- *	MAXDIE	NUMBER OF REINCARNATION MESSAGES AVAILABLE (UP TO 5)
- *	NUMDIE	NUMBER OF TIMES KILLED SO FAR
- *	THRESH	NEXT #TURNS THRESHHOLD (-1 IF NONE)
- *	TRNDEX	INDEX IN TRNVAL OF NEXT THRESHHOLD (SECTION 14 OF DATABASE)
- *	TRNLUZ	# POINTS LOST SO FAR DUE TO NUMBER OF TURNS USED
- *	TURNS	TALLIES HOW MANY COMMANDS HE'S GIVEN (IGNORES YES/NO)
- *	LOGICALS WERE EXPLAINED EARLIER */
+  /*  OTHER RANDOM FLAGS AND COUNTERS, AS FOLLOWS:
+   *	ABBNUM	HOW OFTEN WE SHOULD PRINT NON-ABBREVIATED DESCRIPTIONS
+   *	BONUS	USED TO DETERMINE AMOUNT OF BONUS IF HE REACHES CLOSING
+   *	CLOCK1	NUMBER OF TURNS FROM FINDING LAST TREASURE TILL CLOSING
+   *	CLOCK2	NUMBER OF TURNS FROM FIRST WARNING TILL BLINDING FLASH
+   *	CONDS	MIN VALUE FOR COND(LOC) IF LOC HAS ANY HINTS
+   *	DETAIL	HOW OFTEN WE'VE SAID "NOT ALLOWED TO GIVE MORE DETAIL"
+   *	DKILL	NUMBER OF DWARVES KILLED (UNUSED IN SCORING, NEEDED FOR MSG)
+   *	FOOBAR	CURRENT PROGRESS IN SAYING "FEE FIE FOE FOO".
+   *	HOLDNG	NUMBER OF OBJECTS BEING CARRIED
+   *	IGO	HOW MANY TIMES HE'S SAID "GO XXX" INSTEAD OF "XXX"
+   *	IWEST	HOW MANY TIMES HE'S SAID "WEST" INSTEAD OF "W"
+   *	KNFLOC	0 IF NO KNIFE HERE, LOC IF KNIFE HERE, -1 AFTER CAVEAT
+   *	LIMIT	LIFETIME OF LAMP (NOT SET HERE)
+   *	MAXDIE	NUMBER OF REINCARNATION MESSAGES AVAILABLE (UP TO 5)
+   *	NUMDIE	NUMBER OF TIMES KILLED SO FAR
+   *	THRESH	NEXT #TURNS THRESHHOLD (-1 IF NONE)
+   *	TRNDEX	INDEX IN TRNVAL OF NEXT THRESHHOLD (SECTION 14 OF DATABASE)
+   *	TRNLUZ	# POINTS LOST SO FAR DUE TO NUMBER OF TURNS USED
+   *	TURNS	TALLIES HOW MANY COMMANDS HE'S GIVEN (IGNORES YES/NO)
+   *	LOGICALS WERE EXPLAINED EARLIER */
 
-	TURNS=0;
-	TRNDEX=1;
-	THRESH= -1;
-	if(TRNVLS > 0)THRESH=MOD(TRNVAL[1],100000)+1;
-	TRNLUZ=0;
-	LMWARN=FALSE;
-	IGO=0;
-	IWEST=0;
-	KNFLOC=0;
-	DETAIL=0;
-	ABBNUM=5;
-	/* 1800 */ for (I=0; I<=4; I++) {
-L1800:	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
-	} /* end loop */
-	NUMDIE=0;
-	HOLDNG=0;
-	DKILL=0;
-	FOOBAR=0;
-	BONUS=0;
-	CLOCK1=30;
-	CLOCK2=50;
-	CONDS=SETBIT(11);
-	SAVED=0;
-	CLOSNG=FALSE;
-	PANIC=FALSE;
-	CLOSED=FALSE;
-	CLSHNT=FALSE;
-	NOVICE=FALSE;
-	SETUP=1;
+  TURNS = 0;
+  TRNDEX = 1;
+  THRESH = -1;
+  if (TRNVLS > 0)
+    THRESH = MOD(TRNVAL[1], 100000) + 1;
+  TRNLUZ = 0;
+  LMWARN = FALSE;
+  IGO = 0;
+  IWEST = 0;
+  KNFLOC = 0;
+  DETAIL = 0;
+  ABBNUM = 5;
+  /* 1800 */ for (I = 0; I <= 4; I++) {
+  L1800: {
+    long x = 2 * I + 81;
+    if (RTEXT[x] != 0)
+      MAXDIE = I + 1;
+  }
+  } /* end loop */
+  NUMDIE = 0;
+  HOLDNG = 0;
+  DKILL = 0;
+  FOOBAR = 0;
+  BONUS = 0;
+  CLOCK1 = 30;
+  CLOCK2 = 50;
+  CONDS = SETBIT(11);
+  SAVED = 0;
+  CLOSNG = FALSE;
+  PANIC = FALSE;
+  CLOSED = FALSE;
+  CLSHNT = FALSE;
+  NOVICE = FALSE;
+  SETUP = 1;
 
-	/* if we can ever think of how, we should save it at this point */
+  /* if we can ever think of how, we should save it at this point */
 
-	return(0); /* then we won't actually return from initialisation */
+  return (0); /* then we won't actually return from initialisation */
 }
 
 /*  REPORT ON AMOUNT OF ARRAYS ACTUALLY USED, TO PERMIT REDUCTIONS. */
 
 static int report(void) {
-	/* 1998 */ for (K=1; K<=LOCSIZ; K++) {
-	KK=LOCSIZ+1-K;
-	if(LTEXT[KK] != 0) goto L1997;
-L1998:	/*etc*/ ;
-	} /* end loop */
+  /* 1998 */ for (K = 1; K <= LOCSIZ; K++) {
+    KK = LOCSIZ + 1 - K;
+    if (LTEXT[KK] != 0)
+      goto L1997;
+  L1998: /*etc*/;
+  } /* end loop */
 
-	OBJ=0;
-L1997:	/* 1996 */ for (K=1; K<=100; K++) {
-L1996:	if(PTEXT[K] != 0)OBJ=OBJ+1;
-	} /* end loop */
+  OBJ = 0;
+L1997: /* 1996 */
+  for (K = 1; K <= 100; K++) {
+  L1996:
+    if (PTEXT[K] != 0)
+      OBJ = OBJ + 1;
+  } /* end loop */
 
-	/* 1995 */ for (K=1; K<=TABNDX; K++) {
-L1995:	if(KTAB[K]/1000 == 2)VERB=KTAB[K]-2000;
-	} /* end loop */
+  /* 1995 */ for (K = 1; K <= TABNDX; K++) {
+  L1995:
+    if (KTAB[K] / 1000 == 2)
+      VERB = KTAB[K] - 2000;
+  } /* end loop */
 
-	/* 1994 */ for (K=1; K<=RTXSIZ; K++) {
-	J=RTXSIZ+1-K;
-	if(RTEXT[J] != 0) goto L1993;
-L1994:	/*etc*/ ;
-	} /* end loop */
+  /* 1994 */ for (K = 1; K <= RTXSIZ; K++) {
+    J = RTXSIZ + 1 - K;
+    if (RTEXT[J] != 0)
+      goto L1993;
+  L1994: /*etc*/;
+  } /* end loop */
 
-L1993:	SETPRM(1,LINUSE,LINSIZ);
-	SETPRM(3,TRVS,TRVSIZ);
-	SETPRM(5,TABNDX,TABSIZ);
-	SETPRM(7,KK,LOCSIZ);
-	SETPRM(9,OBJ,100);
-	SETPRM(11,VERB,VRBSIZ);
-	SETPRM(13,J,RTXSIZ);
-	SETPRM(15,CLSSES,CLSMAX);
-	SETPRM(17,HNTMAX,HNTSIZ);
-	SETPRM(19,TRNVLS,TRNSIZ);
-	RSPEAK(267);
-	TYPE0();
-	return(0);
+L1993:
+  SETPRM(1, LINUSE, LINSIZ);
+  SETPRM(3, TRVS, TRVSIZ);
+  SETPRM(5, TABNDX, TABSIZ);
+  SETPRM(7, KK, LOCSIZ);
+  SETPRM(9, OBJ, 100);
+  SETPRM(11, VERB, VRBSIZ);
+  SETPRM(13, J, RTXSIZ);
+  SETPRM(15, CLSSES, CLSMAX);
+  SETPRM(17, HNTMAX, HNTSIZ);
+  SETPRM(19, TRNVLS, TRNSIZ);
+  RSPEAK(267);
+  TYPE0();
+  return (0);
 }
 
 static long init_reading, init_cksum;
 static FILE *f;
 
-static void quick_item(long*);
-static void quick_array(long*, long);
+static void quick_item(long *);
+static void quick_array(long *, long);
 
 static int quick_init(void) {
 #ifdef AMIGA
-	f = fopen("ram:adventure.data", READ_MODE);
+  f = fopen("ram:adventure.data", READ_MODE);
 #else
-	char *adv = getenv("ADVENTURE");
-	f = NULL;
-	if(adv)f = fopen(adv,READ_MODE);
+  char *adv = getenv("ADVENTURE");
+  f = NULL;
+  if (adv)
+    f = fopen(adv, READ_MODE);
 #endif
-	if(f == NULL)f = fopen("adventure.data",READ_MODE);
-	if(f == NULL)return(FALSE);
-	init_reading = TRUE;
-	init_cksum = 1;
-	quick_io();
-	if(fread(&K,4,1,f) == 1) init_cksum -= K; else init_cksum = 1;
-	fclose(f);
-	if(init_cksum != 0)printf("Checksum error!\n");
-	return(init_cksum == 0);
+  if (f == NULL)
+    f = fopen("adventure.data", READ_MODE);
+  if (f == NULL)
+    return (FALSE);
+  init_reading = TRUE;
+  init_cksum = 1;
+  quick_io();
+  if (fread(&K, 4, 1, f) == 1)
+    init_cksum -= K;
+  else
+    init_cksum = 1;
+  fclose(f);
+  if (init_cksum != 0)
+    printf("Checksum error!\n");
+  return (init_cksum == 0);
 }
 
 static int quick_save(void) {
-	printf("Writing adventure.data...\n");
-	f = fopen("adventure.data",WRITE_MODE);
-	if(f == NULL){printf("Can't open file!\n"); return(0);}
-	init_reading = FALSE;
-	init_cksum = 1;
-	quick_io();
-	fwrite(&init_cksum,4,1,f);
-	fclose(f);
-	return(0);
+  printf("Writing adventure.data...\n");
+  f = fopen("adventure.data", WRITE_MODE);
+  if (f == NULL) {
+    printf("Can't open file!\n");
+    return (0);
+  }
+  init_reading = FALSE;
+  init_cksum = 1;
+  quick_io();
+  fwrite(&init_cksum, 4, 1, f);
+  fclose(f);
+  return (0);
 }
 
 static int quick_io(void) {
-	quick_item(&LINUSE);
-	quick_item(&TRVS);
-	quick_item(&CLSSES);
-	quick_item(&TRNVLS);
-	quick_item(&TABNDX);
-	quick_item(&HNTMAX);
-	quick_array(PTEXT,100);
-	quick_array(RTEXT,RTXSIZ);
-	quick_array(CTEXT,CLSMAX);
-	quick_array(OBJSND,100);
-	quick_array(OBJTXT,100);
-	quick_array(STEXT,LOCSIZ);
-	quick_array(LTEXT,LOCSIZ);
-	quick_array(COND,LOCSIZ);
-	quick_array(KEY,LOCSIZ);
-	quick_array(LOCSND,LOCSIZ);
-	quick_array(LINES,LINSIZ);
-	quick_array(CVAL,CLSMAX);
-	quick_array(TTEXT,TRNSIZ);
-	quick_array(TRNVAL,TRNSIZ);
-	quick_array(TRAVEL,TRVSIZ);
-	quick_array(KTAB,TABSIZ);
-	quick_array(ATAB,TABSIZ);
-	quick_array(PLAC,100);
-	quick_array(FIXD,100);
-	quick_array(ACTSPK,VRBSIZ);
-	quick_array((long *)HINTS,(HNTMAX+1)*5-1);
-	return(0);
+  quick_item(&LINUSE);
+  quick_item(&TRVS);
+  quick_item(&CLSSES);
+  quick_item(&TRNVLS);
+  quick_item(&TABNDX);
+  quick_item(&HNTMAX);
+  quick_array(PTEXT, 100);
+  quick_array(RTEXT, RTXSIZ);
+  quick_array(CTEXT, CLSMAX);
+  quick_array(OBJSND, 100);
+  quick_array(OBJTXT, 100);
+  quick_array(STEXT, LOCSIZ);
+  quick_array(LTEXT, LOCSIZ);
+  quick_array(COND, LOCSIZ);
+  quick_array(KEY, LOCSIZ);
+  quick_array(LOCSND, LOCSIZ);
+  quick_array(LINES, LINSIZ);
+  quick_array(CVAL, CLSMAX);
+  quick_array(TTEXT, TRNSIZ);
+  quick_array(TRNVAL, TRNSIZ);
+  quick_array(TRAVEL, TRVSIZ);
+  quick_array(KTAB, TABSIZ);
+  quick_array(ATAB, TABSIZ);
+  quick_array(PLAC, 100);
+  quick_array(FIXD, 100);
+  quick_array(ACTSPK, VRBSIZ);
+  quick_array((long *)HINTS, (HNTMAX + 1) * 5 - 1);
+  return (0);
 }
 
 static void quick_item(long *W) {
-	if(init_reading && fread(W,4,1,f) != 1)return;
-	init_cksum = MOD(init_cksum*13+(*W),60000000);
-	if(!init_reading)fwrite(W,4,1,f);
+  if (init_reading && fread(W, 4, 1, f) != 1)
+    return;
+  init_cksum = MOD(init_cksum * 13 + (*W), 60000000);
+  if (!init_reading)
+    fwrite(W, 4, 1, f);
 }
 
-static void quick_array(long *A, long N) { long I;
-	size_t count = (size_t)(N + 1);
-	if(init_reading && fread(A,4,count,f) != count)printf("Read error!\n");
-	for(I=1;I<=N;I++)init_cksum = MOD(init_cksum*13+A[I],60000000);
-	if(!init_reading && fwrite(A,4,count,f) != count)printf("Write error!\n");
+static void quick_array(long *A, long N) {
+  long i;
+  size_t count = (size_t)(N + 1);
+  if (init_reading && fread(A, 4, count, f) != count)
+    printf("Read error!\n");
+  for (i = 1; i <= N; i++)
+    init_cksum = MOD(init_cksum * 13 + A[i], 60000000);
+  if (!init_reading && fwrite(A, 4, count, f) != count)
+    printf("Write error!\n");
 }
