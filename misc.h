@@ -24,6 +24,10 @@ extern long fGETTXT(long,long,long,long);
 #define GETTXT(SKIP,ONEWRD,UPPER,HASH) fGETTXT(SKIP,ONEWRD,UPPER,HASH)
 extern long fMAKEWD(long);
 #define MAKEWD(LETTRS) fMAKEWD(LETTRS)
+/* Packed input word for the special command object "all". */
+#define ALLWORD MAKEWD(11212)
+/* Sentinel object value used when "all" is parsed as a target. */
+#define ALLTARGET 101
 extern void fPUTTXT(long,long*,long,long);
 #define PUTTXT(WORD,STATE,CASE,HASH) fPUTTXT(WORD,&STATE,CASE,HASH)
 extern void fSHFTXT(long,long);

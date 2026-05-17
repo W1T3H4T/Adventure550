@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "misc.h"
 #include "funcs.h"
+#include "share.h"
 #ifdef __MSDOS__
 #include "alloc.h"
 #endif
@@ -393,6 +394,12 @@ L2625:	if(WD1 != MAKEWD( 715) || WD2 == 0) goto L2630;
 	IGO=IGO+1;
 	if(IGO == 10)RSPEAK(276);
 L2630:	I=VOCAB(WD1,-1);
+	if(I == -1) {
+		if(WD1 == ALLWORD && (VERB == 1 || VERB == 2)) {
+			OBJ=101;
+			goto L4090;
+		}
+	}
 	if(I == -1) goto L3000;
 	K=MOD(I,1000);
 	KQ=I/1000+1;

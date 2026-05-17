@@ -103,6 +103,19 @@ if(BUILD_TESTING)
     )
 
     add_test(
+        NAME smoke.take_all_drop_all
+        COMMAND ${CMAKE_COMMAND}
+            -DADVENTURE_EXE=$<TARGET_FILE:adventure>
+            -DADVENTURE_CWD=${CMAKE_SOURCE_DIR}
+            -DADVENTURE_INPUT=${CMAKE_SOURCE_DIR}/tests/take_all_drop_all_input.txt
+            -DEXPECT_TEXT_1=You\ are\ inside\ a\ building
+            -DEXPECT_TEXT_2=Set\ of\ keys
+            -DEXPECT_TEXT_3=Brass\ lantern
+            -DEXPECT_TEXT_4=You\'re\ not\ carrying\ anything.
+            -P ${CMAKE_SOURCE_DIR}/cmake/RunScriptedGameTest.cmake
+    )
+
+    add_test(
         NAME regression.score_ruleset_current
         COMMAND ${CMAKE_COMMAND}
             -DADVENTURE_EXE=$<TARGET_FILE:adventure>

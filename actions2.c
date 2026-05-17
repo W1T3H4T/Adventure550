@@ -17,6 +17,24 @@ int feed(void);
  *  STATUS OF BOTTLE.  ALSO VARIOUS SIDE EFFECTS, ETC. */
 
 int carry(void) {
+	if(OBJ == ALLTARGET) {
+		long object;
+		long moved;
+
+		moved=0;
+		/* 1 */ for (object=1; object<=100; object++) {
+		if(FIXED[object] != 0) goto L9010;
+		if(!AT(object) || TOTING(object)) goto L9010;
+		OBJ=object;
+		carry();
+		if(TOTING(object))moved=1;
+L9010:		/*etc*/ ;
+		} /* end loop */
+		OBJ=0;
+		if(moved) return(2009);
+		SPK=92;
+		return(2011);
+	}
 	if(TOTING(OBJ)) return(2011);
 	SPK=25;
 	if(OBJ == PLANT && PROP[PLANT] <= 0)SPK=115;
@@ -66,6 +84,23 @@ L9015:	SPK=238;
  *  BIRD (MIGHT ATTACK SNAKE OR DRAGON) AND CAGE (MIGHT CONTAIN BIRD) AND VASE.
  *  DROP COINS AT VENDING MACHINE FOR EXTRA BATTERIES. */
 int discard(long just_do_it) {
+	if(OBJ == ALLTARGET) {
+		long object;
+		long moved;
+
+		moved=0;
+		/* 1 */ for (object=1; object<=100; object++) {
+		if(!TOTING(object)) goto L9020;
+		OBJ=object;
+		discard(just_do_it);
+		if(!TOTING(object))moved=1;
+L9020:		/*etc*/ ;
+		} /* end loop */
+		OBJ=0;
+		if(moved) return(2012);
+		SPK=92;
+		return(2011);
+	}
 	if(just_do_it) goto L9021;
 	if(TOTING(ROD2) && OBJ == ROD && !TOTING(ROD))OBJ=ROD2;
 	if(!TOTING(OBJ)) return(2011);

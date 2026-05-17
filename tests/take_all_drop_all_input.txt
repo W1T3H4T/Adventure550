@@ -1,0 +1,8 @@
+no
+enter
+take all
+inventory
+drop all
+inventory
+quit
+yes
