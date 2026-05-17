@@ -1,5 +1,7 @@
 # Discovered Adventure Graph
 
+> **Note:** Mermaid diagrams require special support to render. See [viewing options](#viewing-mermaid-diagrams) below.
+
 ```mermaid
 flowchart TD
   R1[1: You are standing at the end of a road b...]
@@ -50,3 +52,27 @@ flowchart TD
 - Candidate commands are prioritized from look context.
 - Magic words (xyzzy/xyxxy/plugh) are included in probing.
 - Increase --max-hops for broader exploration (runtime grows quickly).
+
+## Viewing Mermaid Diagrams
+
+Visual Studio's Markdown preview does not natively support Mermaid syntax. Choose one of these options:
+
+### Option 1: View on GitHub
+Push this file to GitHub and view it there - Mermaid is automatically rendered.
+
+### Option 2: Use VS Code
+1. Install [Visual Studio Code](https://code.visualstudio.com/)
+2. Install the extension: [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
+3. Open this file in VS Code and use the preview pane (Ctrl+Shift+V)
+
+### Option 3: Online Mermaid Editor
+1. Copy the entire Mermaid code block (between triple backticks)
+2. Visit [mermaid.live](https://mermaid.live/)
+3. Paste the code into the editor
+4. View the rendered diagram
+
+### Option 4: Install Visual Studio Extension
+Search for "Markdown Editor" or "Mermaid" extensions in Visual Studio's extension marketplace.
+
+### Alternative: Static Maps
+See the `maps/` directory for GIF image files of the Adventure cave maps.

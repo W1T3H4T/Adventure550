@@ -3,6 +3,13 @@
 This document is a textual map model derived from the image maps in this folder.
 It is intended to support deterministic route-based regression tests.
 
+> **Viewing Mermaid Diagrams:**  
+> Visual Studio's built-in Markdown preview does not render Mermaid diagrams. Options:
+> - **GitHub**: View this file on GitHub for automatic Mermaid rendering
+> - **VS Code**: Install [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
+> - **Online**: Copy diagram code to [mermaid.live](https://mermaid.live/)
+> - **Alternative**: See GIF maps in the `maps/` directory
+
 ## Scope and Modeling Notes
 
 - This model captures major rooms and explicit labeled links from map sheets 1-3.

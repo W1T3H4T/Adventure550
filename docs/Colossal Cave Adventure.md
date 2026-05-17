@@ -2,6 +2,12 @@
 
 This document summarizes the map images found in the `maps` directory and provides a single Mermaid overview of how the major regions connect.
 
+> **Note:** The Mermaid diagram below may not render in Visual Studio's Markdown preview. For best viewing:
+> - View on GitHub (Mermaid is natively supported)
+> - Use VS Code with the [Markdown Preview Mermaid Support extension](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
+> - Use an online Mermaid viewer: [mermaid.live](https://mermaid.live/)
+> - See the GIF image files in the `maps/` directory for visual references
+
 ## Images Found in maps/
 
 1. `adv2-1.gif` - Map 1 (surface and early cave)
