@@ -1,0 +1,61 @@
+# Clean Probe Script
+
+# Start room: 3 - You are inside a building, a well house for a large spring.
+# Target room: 15 - You are at one end of a vast hall stretching forward out of sight to
+# Commands are validated successful steps from discovery output.
+
+no
+enter
+look
+take lamp
+take keys
+on
+out
+look
+d
+look
+s
+look
+s
+look
+unlock grate
+look
+open grate
+look
+d
+look
+w
+look
+in
+look
+w
+look
+w
+look
+w
+look
+d
+look
+u
+look
+e
+look
+e
+look
+e
+look
+out
+look
+e
+look
+u
+look
+n
+look
+n
+look
+u
+look
+score
+quit
+yes
