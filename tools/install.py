@@ -284,7 +284,7 @@ def main() -> int:
     source_dir = Path(args.source_dir).resolve()
     build_dir = (
         Path(args.build_dir).resolve()
-        if not Path(args.build_dir).is_absolute()
+        if Path(args.build_dir).is_absolute()
         else Path(args.build_dir)
     )
 
@@ -293,6 +293,21 @@ def main() -> int:
         alt = source_dir / args.build_dir
         if alt.is_dir():
             build_dir = alt
+        else:
+            # Check common Visual Studio CMake output patterns.
+            vs_patterns = [
+                "out/build/x64-Debug",
+                "out/build/x64-Release",
+                "out/build/x86-Debug",
+                "out/build/x86-Release",
+                "out/build",
+            ]
+            for pattern in vs_patterns:
+                vs_build = source_dir / pattern
+                if vs_build.is_dir():
+                    build_dir = vs_build
+                    print(f"Auto-detected Visual Studio build directory: {build_dir}")
+                    break
 
     # Determine target directory.
     if args.target_dir:

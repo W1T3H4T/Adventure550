@@ -80,8 +80,27 @@ You can verify MSVC detection by checking the configuration output:
 2. Ensure the project has already been built.
 3. Install product files into a target directory:
 
-   python tools/install.py --target-dir ./dist/adventure550 --overwrite
+   **Default installation** (uses platform-specific directory):
+   ```
+   python tools/install.py --overwrite
+   ```
 
-The installer copies the compiled executable and required runtime data
-(`adventure.text`) and creates platform-appropriate launcher scripts in the
-target directory.
+   **Custom installation directory**:
+   ```
+   python tools/install.py --target-dir ./dist/adventure550 --overwrite
+   ```
+
+The installer:
+- **Auto-detects** Visual Studio CMake build directories (`out/build/x64-Debug`, etc.)
+- Falls back to standard `build` directory if present
+- Copies the compiled executable and required runtime data (`adventure.text`)
+- Creates platform-appropriate launcher scripts (`run_adventure.cmd` on Windows, `run_adventure.sh` on Linux/macOS)
+
+**Platform default install locations:**
+- **Windows**: `%LOCALAPPDATA%\Adventure550`
+- **Linux/macOS**: `$XDG_CONFIG_HOME/adventure550`
+
+**Explicit build directory** (if auto-detection fails):
+```
+python tools/install.py --build-dir out/build/x64-Debug --overwrite
+```
