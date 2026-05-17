@@ -164,20 +164,20 @@
  *	%B = VARIABLE NUMBER OF BLANKS
  *	%! = THE ENTIRE MESSAGE SHOULD BE SUPPRESSED */
 
-static int quick_init();
-static int raw_init();
-static int report();
-static int quick_save();
-static int finish_init();
-static int quick_io();
+static int quick_init(void);
+static int raw_init(void);
+static int report(void);
+static int quick_save(void);
+static int finish_init(void);
+static int quick_io(void);
 
-initialise() {
+int initialise(void) {
 	printf("Initialising...\n");
 	if(!quick_init()){raw_init(); report(); quick_save();}
 	finish_init();
 }
 
-static raw_init() {
+static int raw_init(void) {
 	printf("Couldn't find adventure.data, using adventure.text...\n");
 
 /*  CLEAR OUT THE VARIOUS TEXT-POINTER ARRAYS.  ALL TEXT IS STORED IN ARRAY
@@ -373,7 +373,7 @@ L1092:	LOCSND[K]=KK;
  *  CORRECT LINK TO USE.)  ABB IS ZEROED; IT CONTROLS WHETHER THE ABBREVIATED
  *  DESCRIPTION IS PRINTED.  COUNTS MOD 5 UNLESS "LOOK" IS USED. */
 
-static finish_init() {
+static int finish_init(void) {
 	/* 1101 */ for (I=1; I<=100; I++) {
 	PLACE[I]=0;
 	PROP[I]=0;
@@ -597,7 +597,7 @@ L1800:	{long x = 2*I+81; if(RTEXT[x] != 0)MAXDIE=I+1;}
 
 /*  REPORT ON AMOUNT OF ARRAYS ACTUALLY USED, TO PERMIT REDUCTIONS. */
 
-static report() {
+static int report(void) {
 	/* 1998 */ for (K=1; K<=LOCSIZ; K++) {
 	KK=LOCSIZ+1-K;
 	if(LTEXT[KK] != 0) goto L1997;
@@ -639,7 +639,7 @@ static FILE *f;
 static void quick_item(long*);
 static void quick_array(long*, long);
 
-static quick_init() {
+static int quick_init(void) {
 #ifdef AMIGA
 	f = fopen("ram:adventure.data", READ_MODE);
 #else
@@ -659,7 +659,7 @@ static quick_init() {
 	return(init_cksum == 0);
 }
 
-static quick_save() {
+static int quick_save(void) {
 	printf("Writing adventure.data...\n");
 	f = fopen("adventure.data",WRITE_MODE);
 	if(f == NULL){printf("Can't open file!\n"); return(0);}
@@ -671,7 +671,7 @@ static quick_save() {
 	return(0);
 }
 
-static quick_io() {
+static int quick_io(void) {
 	quick_item(&LINUSE);
 	quick_item(&TRVS);
 	quick_item(&CLSSES);
@@ -702,13 +702,13 @@ static quick_io() {
 	return(0);
 }
 
-static void quick_item(W)long *W; {
+static void quick_item(long *W) {
 	if(init_reading && fread(W,4,1,f) != 1)return;
 	init_cksum = MOD(init_cksum*13+(*W),60000000);
 	if(!init_reading)fwrite(W,4,1,f);
 }
 
-static void quick_array(A,N)long *A, N; { long I;
+static void quick_array(long *A, long N) { long I;
 	if(init_reading && fread(A,4,N+1,f) != N+1)printf("Read error!\n");
 	for(I=1;I<=N;I++)init_cksum = MOD(init_cksum*13+A[I],60000000);
 	if(!init_reading && fwrite(A,4,N+1,f)!=N+1)printf("Write error!\n");

@@ -1,52 +1,64 @@
-# Prerequisites
+# --- C and C++ build outputs ---
 *.d
-
-# Object files
+*.slo
+*.lo
 *.o
-*.ko
 *.obj
-*.elf
-
-# Linker output
-*.ilk
-*.map
-*.exp
-
-# Precompiled Headers
 *.gch
 *.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
 *.so
-*.so.*
 *.dylib
-
-# Executables
+*.dll
+*.mod
+*.smod
+*.lai
+*.la
+*.a
+*.lib
 *.exe
 *.out
 *.app
-*.i*86
-*.x86_64
-*.hex
 
-# Debug files
-*.dSYM/
-*.su
-*.idb
-*.pdb
+# --- CMake and Ninja ---
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+CTestTestfile.cmake
+Testing/
+build.ninja
+.ninja_deps
+.ninja_log
 
-# Kernel Module Compile Results
-*.mod*
-*.cmd
-.tmp_versions/
-modules.order
-Module.symvers
-Mkfile.old
-dkms.conf
+# Build directories
+build/
+build-*/
+build-ninja/
+out/
+install/
+Debug/
+Release/
+RelWithDebInfo/
+MinSizeRel/
+
+# --- Visual Studio ---
+.vs/
+.vscode/
+*.VC.db
+*.VC.opendb
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.opendb
+*.ipch
+ipch/
+x64/
+x86/
+
+# --- OS files ---
+.DS_Store
+
+# --- Python ---
+__pycache__/
+*.py[cod]

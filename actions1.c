@@ -1,3 +1,6 @@
+
+#include <stdio.h>
+#include <stdlib.h>
 #include "misc.h"
 #include "main.h"
 #include "share.h"
@@ -6,7 +9,12 @@
 #define TRUE  (0==0)
 #define FALSE (0!=0)
 
-extern carry(), discard(long), attack(), throw(), feed(), fill();
+extern int carry(void);
+extern int discard(long);
+extern int attack(void);
+extern int throw(void);
+extern int feed(void);
+extern int fill(void);
 
 /* This stuff was broken off as part of an effort to get the main program
  * to compile without running out of memory.  We're called with a number
@@ -17,7 +25,7 @@ extern carry(), discard(long), attack(), throw(), feed(), fill();
 /*  ANALYSE A VERB.  REMEMBER WHAT IT WAS, GO BACK FOR OBJECT IF SECOND WORD
  *  UNLESS VERB IS "SAY", WHICH SNARFS ARBITRARY SECOND WORD. */
 
-action(STARTAT)long STARTAT; {
+int action(long STARTAT) {
 	switch(STARTAT) {
 	   case 4000: goto L4000;
 	   case 4090: goto L4090;

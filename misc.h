@@ -28,7 +28,7 @@ extern void fPUTTXT(long,long*,long,long);
 #define PUTTXT(WORD,STATE,CASE,HASH) fPUTTXT(WORD,&STATE,CASE,HASH)
 extern void fSHFTXT(long,long);
 #define SHFTXT(FROM,DELTA) fSHFTXT(FROM,DELTA)
-extern void fTYPE0();
+extern void fTYPE0(void);
 #define TYPE0() fTYPE0()
 extern void fSAVWDS(long*,long*,long*,long*,long*,long*,long*);
 #define SAVWDS(W1,W2,W3,W4,W5,W6,W7) fSAVWDS(&W1,&W2,&W3,&W4,&W5,&W6,&W7)
@@ -64,11 +64,13 @@ extern void fBUG(long);
 #define BUG(NUM) fBUG(NUM)
 extern void fMAPLIN(long);
 #define MAPLIN(FIL) fMAPLIN(FIL)
-extern void fTYPE();
+extern void fTYPE(void);
 #define TYPE() fTYPE()
-extern void fMPINIT();
+extern void fMPINIT(void);
 #define MPINIT() fMPINIT()
 extern void fSAVEIO(long,long,long*);
+extern long fIABS(long);
+extern long fMOD(long,long);
 #define SAVEIO(OP,IN,ARR) fSAVEIO(OP,IN,ARR)
 extern void fDATIME(long*,long*);
 #define DATIME(D,T) fDATIME(&D,&T)

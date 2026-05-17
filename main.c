@@ -1,3 +1,6 @@
+
+#include <stdio.h>
+#include <stdlib.h>
 #include "misc.h"
 #ifdef __MSDOS__
 #include "alloc.h"
@@ -35,15 +38,16 @@ long ABBNUM, ACTSPK[36], AMBER, ATTACK, AXE, BACK, BATTER, BEAR, BIRD, BLOOD, BO
 		VOLCAN, VRBSIZ = 35, VRSION = 25, WATER, WD1, WD1X, WD2, WD2X,
 		WZDARK = FALSE, ZZWORD;
 
-extern initialise();
+
+extern void initialise(void);
 extern void score(long);
-extern action(long);
+extern int action(long);
 
 /*
  * MAIN PROGRAM
  */
 
-main() {
+int main(void) {
 
 /*  ADVENTURE (REV 2: 20 TREASURES) */
 

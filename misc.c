@@ -1,6 +1,8 @@
 #include "main.h"
 #include "misc.h"
 #include <stdio.h>
+#include <string.h>
+extern void score(long);
 
 #define TRUE  (0==0)
 #define FALSE (0!=0)
@@ -8,7 +10,7 @@
 /*  I/O ROUTINES (SPEAK, PSPEAK, RSPEAK, SETPRM, GETIN, YES) */
 
 #undef SPEAK
-void fSPEAK(N)long N; {
+void fSPEAK(long N) {
 long BLANK, CASE, I, K, L, NEG, NPARMS, PARM, PRMTYP, STATE;
 
 /*  PRINT THE MESSAGE WHICH STARTS AT LINES(N).  PRECEDE IT WITH A BLANK LINE
@@ -112,7 +114,7 @@ L40:	if(BLANK)TYPE0();
 
 #define SPEAK(N) fSPEAK(N)
 #undef PSPEAK
-void fPSPEAK(MSG,SKIP)long MSG, SKIP; {
+void fPSPEAK(long MSG, long SKIP) {
 long I, M;
 
 /*  FIND THE SKIP+1ST MESSAGE FROM MSG AND PRINT IT.  MSG SHOULD BE THE INDEX OF
@@ -888,7 +890,7 @@ long I, VAL; static FILE *OPENED = NULL;
 	if(MAP2[1] == 0)MPINIT();
 
 	if(FIL) goto L15;
-	gets(INLINE+1);
+	fgets(INLINE+1, 100, stdin);
 	if(feof(stdin)) score(1);
 	 goto L20;
 
@@ -1002,7 +1004,10 @@ L10:	fclose(F);
 	return;
 
 L20:	printf("\nFile name: ");
-	gets(NAME);
+	fgets(NAME, 100, stdin);
+// Remove trailing newline if present
+char *newline = strchr(NAME, '\n');
+if (newline) *newline = '\0';
 	F=fopen(NAME,(IN ? READ_MODE : WRITE_MODE));
 	if(F == NULL) {printf("Can't open file, try again.\n"); goto L20;}
 	return;
@@ -1015,5 +1020,5 @@ L30:	if(IN)fread(ARR,4,250,F);
 
 
 
-long fIABS(N)long N; {return(N<0? -N : N);}
-long fMOD(N,M)long N, M; {return(N%M);}
+long fIABS(long N) { return (N < 0 ? -N : N); }
+long fMOD(long N, long M) { return (N % M); }

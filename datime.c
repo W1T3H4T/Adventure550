@@ -1,3 +1,6 @@
+
+#include <stdio.h>
+#include <stdlib.h>
 #ifdef AMIGA
 #define _TIME_
 #include "exec/types.h"
@@ -7,7 +10,7 @@
 
 struct IntuitionBase *IntuitionBase = NULL;
 
-fDATIME(X,Y)int *X, *Y; {
+void fDATIME(int *X, int *Y) {
 static int GOTX = 0, GOTY;
 	if(GOTX == 0) {
 		IntuitionBase = (struct IntuitionBase *)
@@ -30,7 +33,7 @@ static int GOTX = 0, GOTY;
 #define _TIME_
 #include "time.h"
 
-fDATIME(X,Y)long *X, *Y; {
+void fDATIME(long *X, long *Y) {
 	time(X); time(Y);
 	*Y /= 2;
 	/* it would be even better if the two numbers were totally
@@ -39,12 +42,20 @@ fDATIME(X,Y)long *X, *Y; {
 #endif
 
 #ifndef _TIME_
-#include "sys/time.h"
-
-fDATIME(X,Y)long *X, *Y; {
+#if defined(_WIN32) || defined(_WIN64)
+#include <time.h>
+void fDATIME(long *X, long *Y) {
+	time_t now = time(NULL);
+	*X = (long)now;
+	*Y = 0;
+}
+#else
+#include <sys/time.h>
+void fDATIME(long *X, long *Y) {
 	struct timeval now;
 	gettimeofday(&now, 0);
 	*X = now.tv_sec;
 	*Y = now.tv_usec;
 }
+#endif
 #endif
