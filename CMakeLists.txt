@@ -21,20 +21,28 @@ if(MSVC)
     set(CMAKE_WIN32_EXECUTABLE FALSE)
 endif()
 
+# Directory structure
+set(SRC_DIR ${CMAKE_SOURCE_DIR}/src)
+set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
+
 # Source files
 set(SOURCES
-    main.c
-    init.c
-    actions1.c
-    actions2.c
-    score.c
-    misc.c
-    datime.c
+    ${SRC_DIR}/main.c
+    ${SRC_DIR}/init.c
+    ${SRC_DIR}/actions1.c
+    ${SRC_DIR}/actions2.c
+    ${SRC_DIR}/score.c
+    ${SRC_DIR}/misc.c
+    ${SRC_DIR}/datime.c
 )
 
 add_executable(adventure ${SOURCES})
 
-target_include_directories(adventure PRIVATE ${CMAKE_SOURCE_DIR})
+target_include_directories(adventure 
+    PRIVATE 
+        ${INCLUDE_DIR}
+        ${CMAKE_SOURCE_DIR}  # For backward compatibility with data files
+)
 
 # Platform-specific definitions
 if(WIN32)

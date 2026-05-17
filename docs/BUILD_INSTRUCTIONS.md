@@ -2,6 +2,30 @@
 
 See FEATURE_LIST.md for current supported features.
 
+## Project Structure
+
+```
+Adventure550/
+??? src/              # C source files
+?   ??? main.c
+?   ??? init.c
+?   ??? actions1.c
+?   ??? actions2.c
+?   ??? score.c
+?   ??? misc.c
+?   ??? datime.c
+??? include/          # Header files
+?   ??? funcs.h
+?   ??? main.h
+?   ??? misc.h
+?   ??? share.h
+??? cmake/            # CMake test scripts
+??? docs/             # Documentation
+??? tests/            # Test input files
+??? tools/            # Build and install tools
+??? CMakeLists.txt    # CMake build configuration
+```
+
 ## Prerequisites
 
 - CMake 3.10 or newer
