@@ -30,6 +30,7 @@
    - [x] Added platform conditional handling in `datime.c`.
 5. **Clean Up Labels** (Optional)
    - [ ] Optional deep cleanup: remove legacy labels and reduce `goto` usage without changing behavior.
+
 6. **CTest Integration**
    - [x] Added a non-interactive `smoke.startup` CTest to validate executable startup/exit.
    - [x] Added parser regression (`smoke.parser_score_quit`).
@@ -52,12 +53,7 @@
 9. **Runtime Data I/O Portability** (Completed)
    - [x] Fixed binary/text file mode mismatch on Windows (`READ_MODE` / `WRITE_MODE`) to prevent corrupted save/data reads.
 
-10. **550-Point Regression Goal** (Blocked)
-
-- [ ] Create a full-cave traversal regression that ends at 550 points.
-- Blocker: current game/data reports maximum possible score of 430 (as emitted by runtime scoring output), so a 550-point assertion cannot pass without migrating scoring/data to the 550-point ruleset.
-
-1. **Current Ruleset Regression** (Completed)
+10. **Current Ruleset Regression** (Completed)
 
 - [x] Added score regression aligned to in-code scoring model (430 max) with deterministic map-derived route.
 

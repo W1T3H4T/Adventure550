@@ -3,9 +3,23 @@ project(Adventure550 C)
 
 include(CTest)
 
+# Compiler identification
+message(STATUS "Compiler: ${CMAKE_C_COMPILER_ID}")
+message(STATUS "Compiler Version: ${CMAKE_C_COMPILER_VERSION}")
+message(STATUS "System: ${CMAKE_SYSTEM_NAME}")
+
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
+
+# MSVC-specific configuration
+if(MSVC)
+    message(STATUS "Configuring for MSVC environment")
+    # Use static runtime for better portability
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    # Ensure proper Windows subsystem
+    set(CMAKE_WIN32_EXECUTABLE FALSE)
+endif()
 
 # Source files
 set(SOURCES
@@ -22,15 +36,34 @@ add_executable(adventure ${SOURCES})
 
 target_include_directories(adventure PRIVATE ${CMAKE_SOURCE_DIR})
 
+# Platform-specific definitions
 if(WIN32)
-    target_compile_definitions(adventure PRIVATE _CRT_SECURE_NO_WARNINGS)
+    target_compile_definitions(adventure PRIVATE 
+        _CRT_SECURE_NO_WARNINGS
+        _CRT_NONSTDC_NO_DEPRECATE
+    )
 endif()
 
-target_compile_options(adventure PRIVATE -Wall -Wextra -pedantic)
-
+# Compiler-specific flags
 if(CMAKE_C_COMPILER_ID MATCHES "Clang|GNU")
+    message(STATUS "Applying GCC/Clang warning flags")
+    target_compile_options(adventure PRIVATE -Wall -Wextra -pedantic)
     # Legacy FORTRAN-translated sources intentionally retain labels/goto structure.
     target_compile_options(adventure PRIVATE -Wno-unused-label -Wno-missing-braces)
+elseif(MSVC)
+    message(STATUS "Applying MSVC warning flags and options")
+    # Remove default /W3 and apply /W4
+    string(REPLACE "/W3" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+    target_compile_options(adventure PRIVATE 
+        /W4                    # Warning level 4
+        /wd4102               # Unreferenced label (expected in FORTRAN-translated code)
+        /wd4244               # Conversion warnings (expected in legacy code)
+        /utf-8                # Set source and execution character sets to UTF-8
+    )
+    # MSVC-specific definitions
+    target_compile_definitions(adventure PRIVATE
+        _CONSOLE
+    )
 endif()
 
 if(BUILD_TESTING)

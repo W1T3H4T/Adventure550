@@ -6,7 +6,9 @@ See FEATURE_LIST.md for current supported features.
 
 - CMake 3.10 or newer
 - Ninja build system
-- Modern C compiler (gcc, clang, etc.)
+- Modern C compiler:
+  - **Windows**: MSVC (Visual Studio 2019 or newer), gcc, or clang
+  - **Linux/macOS**: gcc, clang, or other C11-compliant compiler
 - Python 3.8 or newer (for tools/install.py)
 
 ## Platform Support
@@ -17,23 +19,60 @@ See FEATURE_LIST.md for current supported features.
 
 ## Build
 
+### Standard Build (All Platforms)
+
 1. Open a terminal in the project directory.
 2. Create a build directory:
 
+   ```
    mkdir build
    cd build
+   ```
 
 3. Run CMake with Ninja:
 
+   ```
    cmake -G Ninja ..
+   ```
+
+   The CMake configuration will automatically detect your compiler:
+   - **MSVC**: Applies Windows-specific flags and disables warnings for legacy FORTRAN code
+   - **GCC/Clang**: Applies `-Wall -Wextra -pedantic` with exceptions for legacy code patterns
 
 4. Build the project:
 
+   ```
    ninja
+   ```
+
+   Or using CMake's build wrapper:
+
+   ```
+   cmake --build .
+   ```
 
 5. Run tests with CTest:
 
+   ```
    ctest --output-on-failure
+   ```
+
+### Windows-Specific Notes (MSVC)
+
+When building with MSVC (cl.exe), the CMake configuration:
+- Automatically detects the MSVC environment
+- Sets `/W4` warning level
+- Disables `/wd4102` (unreferenced labels) and `/wd4244` (type conversions) for legacy code
+- Configures UTF-8 source encoding
+- Uses static runtime for better portability
+
+You can verify MSVC detection by checking the configuration output:
+```
+-- Compiler: MSVC
+-- Compiler Version: 19.x.xxxxx.x
+-- Configuring for MSVC environment
+-- Applying MSVC warning flags and options
+```
 
 ## Install (Python)
 
