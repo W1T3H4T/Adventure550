@@ -14,7 +14,7 @@ a modern CMake build system.
 - **Save/resume functionality** - Save your game progress and continue later
 - **Original gameplay** - Faithful to the classic 550-point Adventure experience
 	-  **Note** This version retains the original 430-point maximum score, as the 550 points in the title refer to the original expansion from 350 to 550 points by Don Woods, not the actual maximum score.
-		Future work will explore adding the missing 120 points to reach the full 550-point or perhaps the 770-point experience.
+		Future work will explore adding the missing points to reach the full 550-point or perhaps refactoring to the 770-point experience.
 
 ## Quick Start
 
@@ -64,27 +64,55 @@ python tools/install.py --overwrite
 
 ```
 Adventure550/
-├── src/              # C source files
-│   ├── main.c        # Main game loop
-│   ├── init.c        # Initialization and save/load
-│   ├── actions1.c    # Action handlers (part 1)
-│   ├── actions2.c    # Action handlers (part 2)
-│   ├── score.c       # Scoring system
-│   ├── misc.c        # Utility functions
-│   └── datime.c      # Date/time compatibility
-├── include/          # Header files
-│   ├── funcs.h       # Function declarations
-│   ├── main.h        # Main program declarations
-│   ├── misc.h        # Utility declarations
-│   └── share.h       # Global variable declarations
-├── cmake/            # CMake test scripts
-├── docs/             # Documentation
+├── src/                               # C source files
+│   ├── main.c                         # Main game loop
+│   ├── init.c                         # Initialization and save/load
+│   ├── actions1.c                     # Action handlers (part 1)
+│   ├── actions2.c                     # Action handlers (part 2)
+│   ├── score.c                        # Scoring system
+│   ├── misc.c                         # Utility functions
+│   └── datime.c                       # Date/time compatibility
+├── include/                           # Header files
+│   ├── funcs.h                        # Function declarations
+│   ├── main.h                         # Main program declarations
+│   ├── misc.h                         # Utility declarations
+│   └── share.h                        # Shared global variable declarations
+├── cmake/                             # CMake test driver scripts
+├── docs/                              # Documentation
 │   ├── BUILD_INSTRUCTIONS.md
-│   └── FEATURE_LIST.md
-├── tests/            # Test input files
-├── tools/            # Build and installation tools
-├── adventure.text    # Game data file
-└── CMakeLists.txt    # CMake configuration
+│   ├── Colossal Cave Adventure.md     # Map overview and GIF references
+│   ├── FEATURE_LIST.md
+│   ├── MERMAID_QUICK_REF.md           # Quick reference for Mermaid viewing
+│   ├── MERMAID_VIEWING_GUIDE.md       # How to view Mermaid diagrams
+│   ├── discovered-clear-paths.md      # Auto-discovered traversal paths
+│   ├── discovered-map-mermaid.md      # Auto-discovered game graph
+│   ├── discovered-treasure-route.md   # Treasure collection route
+│   └── task-list.md                   # Development task tracking
+├── maps/                              # Cave map images and model
+│   ├── adv2-1.gif                     # Map 1: surface and early cave
+│   ├── adv2-2.gif                     # Map 2: main cave and halls
+│   ├── adv2-3.gif                     # Map 3: deeper cave and canyons
+│   └── adventure-maps-mermaid.md      # Mermaid map model
+├── tests/                             # CTest input files
+│   ├── cross_room_inventory_input.txt
+│   ├── discovered_clean_route_input.txt
+│   ├── empty_input.txt
+│   ├── inventory_roundtrip_input.txt
+│   ├── map1_surface_route_input.txt
+│   ├── resume_session_input.txt
+│   ├── save_session_input.txt
+│   ├── score_quit_input.txt
+│   └── take_all_drop_all_input.txt
+├── tools/                             # Build and installation tools
+│   ├── build_all_targets.py           # Multi-target build helper
+│   ├── install.py                     # Cross-platform installer
+│   └── map_probe.py                   # Game graph discovery tool
+├── adventure.data                     # Compiled game data (binary)
+├── adventure.text                     # Game data source file
+├── CMakeLists.txt                     # CMake build configuration
+├── CMakeSettings.json                 # Visual Studio CMake settings
+├── copyright                          # Copyright notice
+└── README.md                          # This file
 ```
 
 ## Documentation
