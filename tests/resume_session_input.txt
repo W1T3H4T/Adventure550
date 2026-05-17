@@ -1,0 +1,6 @@
+no
+resume
+yes
+test-savegame.dat
+quit
+yes

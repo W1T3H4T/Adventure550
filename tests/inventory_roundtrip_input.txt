@@ -1,0 +1,8 @@
+no
+enter
+take lamp
+inventory
+drop lamp
+inventory
+quit
+yes

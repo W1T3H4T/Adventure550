@@ -1,0 +1,4 @@
+no
+save
+yes
+test-savegame.dat

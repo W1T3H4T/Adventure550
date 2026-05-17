@@ -1,0 +1,7 @@
+no
+enter
+out
+west
+east
+quit
+yes

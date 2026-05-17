@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "misc.h"
+#include "funcs.h"
 #ifdef __MSDOS__
 #include "alloc.h"
 #endif
@@ -66,8 +67,6 @@ int main(void) {
  *  NOVICE SAYS WHETHER HE ASKED FOR INSTRUCTIONS AT START-UP
  *  PANIC SAYS WHETHER HE'S FOUND OUT HE'S TRAPPED IN THE CAVE
  *  WZDARK SAYS WHETHER THE LOC HE'S LEAVING WAS DARK */
-
-#include "funcs.h"
 
 /*  READ THE DATABASE IF WE HAVE NOT YET DONE SO */
 

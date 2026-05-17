@@ -1,6 +1,7 @@
 #include "main.h"
 #include "misc.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 extern void score(long);
 
@@ -122,13 +123,14 @@ long I, M;
 
 
 	M=PTEXT[MSG];
-	if(SKIP < 0) goto L9;
-	/* 3 */ for (I=0; I<=SKIP; I++) {
-L1:	M=IABS(LINES[M]);
-	if(LINES[M] >= 0) goto L1;
-L3:	/*etc*/ ;
-	} /* end loop */
-L9:	SPEAK(M);
+	if(SKIP >= 0) {
+		/* 3 */ for (I=0; I<=SKIP; I++) {
+			do {
+				M=IABS(LINES[M]);
+			} while(LINES[M] >= 0);
+		} /* end loop */
+	}
+	SPEAK(M);
 	return;
 }
 
@@ -136,7 +138,7 @@ L9:	SPEAK(M);
 
 #define PSPEAK(MSG,SKIP) fPSPEAK(MSG,SKIP)
 #undef RSPEAK
-void fRSPEAK(I)long I; {
+void fRSPEAK(long I) {
 ;
 
 /*  PRINT THE I-TH "RANDOM" MESSAGE (SECTION 6 OF DATABASE). */
@@ -150,7 +152,7 @@ void fRSPEAK(I)long I; {
 
 #define RSPEAK(I) fRSPEAK(I)
 #undef SETPRM
-void fSETPRM(FIRST,P1,P2)long FIRST, P1, P2; {
+void fSETPRM(long FIRST, long P1, long P2) {
 ;
 
 /*  STORES PARAMETERS INTO THE PRMCOM PARMS ARRAY FOR USE BY SPEAK.  P1 AND P2
@@ -171,7 +173,7 @@ void fSETPRM(FIRST,P1,P2)long FIRST, P1, P2; {
 #define WORD1X (*wORD1X)
 #define WORD2 (*wORD2)
 #define WORD2X (*wORD2X)
-void fGETIN(wORD1,wORD1X,wORD2,wORD2X)long *wORD1, *wORD1X, *wORD2, *wORD2X; {
+void fGETIN(long *wORD1, long *wORD1X, long *wORD2, long *wORD2X) {
 long JUNK;
 
 /*  GET A COMMAND FROM THE ADVENTURER.  SNARF OUT THE FIRST WORD, PAD IT WITH
@@ -205,7 +207,7 @@ L22:	JUNK=GETTXT(FALSE,TRUE,TRUE,0);
 #undef WORD2X
 #define GETIN(WORD1,WORD1X,WORD2,WORD2X) fGETIN(&WORD1,&WORD1X,&WORD2,&WORD2X)
 #undef YES
-long fYES(X,Y,Z)long X, Y, Z; {
+long fYES(long X, long Y, long Z) {
 
 long YES, REPLY, JUNK1, JUNK2, JUNK3;
 
@@ -241,7 +243,7 @@ L20:	YES=FALSE;
 
 #define YES(X,Y,Z) fYES(X,Y,Z)
 #undef GETNUM
-long fGETNUM(K)long K; {
+long fGETNUM(long K) {
 long DIGIT, GETNUM, SIGN;
 
 /*  OBTAIN THE NEXT INTEGER FROM AN INPUT LINE.  IF K>0, WE FIRST READ A
@@ -278,7 +280,7 @@ L42:	GETNUM=GETNUM*SIGN;
 
 #define GETNUM(K) fGETNUM(K)
 #undef GETTXT
-long fGETTXT(SKIP,ONEWRD,UPPER,HASH)long HASH, ONEWRD, SKIP, UPPER; {
+long fGETTXT(long SKIP, long ONEWRD, long UPPER, long HASH) {
 long CHAR, GETTXT, I; static long SPLITTING = -1;
 
 /*  TAKE CHARACTERS FROM AN INPUT LINE AND PACK THEM INTO 30-BIT WORDS.
@@ -326,7 +328,7 @@ L15:	/*etc*/ ;
 
 #define GETTXT(SKIP,ONEWRD,UPPER,HASH) fGETTXT(SKIP,ONEWRD,UPPER,HASH)
 #undef MAKEWD
-long fMAKEWD(LETTRS)long LETTRS; {
+long fMAKEWD(long LETTRS) {
 long I, L, MAKEWD;
 
 /*  COMBINE FIVE UPPERCASE LETTERS (REPRESENTED BY PAIRS OF DECIMAL DIGITS
@@ -355,7 +357,7 @@ L10:	MAKEWD=MAKEWD+I*(MOD(L,50)+10);
 #define MAKEWD(LETTRS) fMAKEWD(LETTRS)
 #undef PUTTXT
 #define STATE (*sTATE)
-void fPUTTXT(WORD,sTATE,CASE,HASH)long CASE, HASH, *sTATE, WORD; {
+void fPUTTXT(long WORD, long *sTATE, long CASE, long HASH) {
 long ALPH1, ALPH2, BYTE, DIV, I, W;
 
 /*  UNPACK THE 30-BIT VALUE IN WORD TO OBTAIN UP TO 5 INTEGER-ENCODED CHARS,
@@ -400,7 +402,7 @@ L18:	W=(W-BYTE*DIV)*64;
 #undef STATE
 #define PUTTXT(WORD,STATE,CASE,HASH) fPUTTXT(WORD,&STATE,CASE,HASH)
 #undef SHFTXT
-void fSHFTXT(FROM,DELTA)long DELTA, FROM; {
+void fSHFTXT(long FROM, long DELTA) {
 long I, II, JJ;
 
 /*  MOVE INLINE(N) TO INLINE(N+DELTA) FOR N=FROM,LNLENG.  DELTA CAN BE
@@ -422,7 +424,7 @@ L2:	LNLENG=LNLENG+DELTA;
 
 #define SHFTXT(FROM,DELTA) fSHFTXT(FROM,DELTA)
 #undef TYPE0
-void fTYPE0() {
+void fTYPE0(void) {
 long TEMP;
 
 /*  TYPE A BLANK LINE.  THIS PROCEDURE IS PROVIDED AS A CONVENIENCE FOR CALLERS
@@ -444,7 +446,7 @@ long TEMP;
 /*  SUSPEND/RESUME I/O ROUTINES (SAVWDS, SAVARR, SAVWRD) */
 
 #undef SAVWDS
-void fSAVWDS(W1,W2,W3,W4,W5,W6,W7)long *W1, *W2, *W3, *W4, *W5, *W6, *W7; {
+void fSAVWDS(long *W1, long *W2, long *W3, long *W4, long *W5, long *W6, long *W7) {
 ;
 
 /*  WRITE OR READ 7 VARIABLES.  SEE SAVWRD. */
@@ -463,7 +465,7 @@ void fSAVWDS(W1,W2,W3,W4,W5,W6,W7)long *W1, *W2, *W3, *W4, *W5, *W6, *W7; {
 
 #define SAVWDS(W1,W2,W3,W4,W5,W6,W7) fSAVWDS(&W1,&W2,&W3,&W4,&W5,&W6,&W7)
 #undef SAVARR
-void fSAVARR(ARR,N)long ARR[], N; {
+void fSAVARR(long ARR[], long N) {
 long I;
 
 /*  WRITE OR READ AN ARRAY OF N WORDS.  SEE SAVWRD. */
@@ -480,7 +482,7 @@ L1:	SAVWRD(0,ARR[I]);
 #define SAVARR(ARR,N) fSAVARR(ARR,N)
 #undef SAVWRD
 #define WORD (*wORD)
-void fSAVWRD(OP,wORD)long OP, *wORD; {
+void fSAVWRD(long OP, long *wORD) {
 static long BUF[250], CKSUM = 0, H1, HASH = 0, N = 0, STATE = 0;
 
 /*  IF OP<0, START WRITING A FILE, USING WORD TO INITIALISE ENCRYPTION; SAVE
@@ -542,7 +544,7 @@ L32:	N--; WORD=BUF[N]-CKSUM; N++;
 #undef WORD
 #define SAVWRD(OP,WORD) fSAVWRD(OP,&WORD)
 #undef VOCAB
-long fVOCAB(ID,INIT)long ID, INIT; {
+long fVOCAB(long ID, long INIT) {
 long HASH, I, VOCAB;
 
 /*  LOOK UP ID IN THE VOCABULARY (ATAB) AND RETURN ITS "DEFINITION" (KTAB), OR
@@ -575,7 +577,7 @@ L3:	VOCAB=KTAB[I];
 
 #define VOCAB(ID,INIT) fVOCAB(ID,INIT)
 #undef DSTROY
-void fDSTROY(OBJECT)long OBJECT; {
+void fDSTROY(long OBJECT) {
 ;
 
 /*  PERMANENTLY ELIMINATE "OBJECT" BY MOVING TO A NON-EXISTENT LOCATION. */
@@ -589,7 +591,7 @@ void fDSTROY(OBJECT)long OBJECT; {
 
 #define DSTROY(OBJECT) fDSTROY(OBJECT)
 #undef JUGGLE
-void fJUGGLE(OBJECT)long OBJECT; {
+void fJUGGLE(long OBJECT) {
 long I, J;
 
 /*  JUGGLE AN OBJECT BY PICKING IT UP AND PUTTING IT DOWN AGAIN, THE PURPOSE
@@ -607,7 +609,7 @@ long I, J;
 
 #define JUGGLE(OBJECT) fJUGGLE(OBJECT)
 #undef MOVE
-void fMOVE(OBJECT,WHERE)long OBJECT, WHERE; {
+void fMOVE(long OBJECT, long WHERE) {
 long FROM;
 
 /*  PLACE ANY OBJECT ANYWHERE BY PICKING IT UP AND DROPPING IT.  MAY ALREADY BE
@@ -628,7 +630,7 @@ L2:	if(FROM > 0 && FROM <= 300)CARRY(OBJECT,FROM);
 
 #define MOVE(OBJECT,WHERE) fMOVE(OBJECT,WHERE)
 #undef PUT
-long fPUT(OBJECT,WHERE,PVAL)long OBJECT, PVAL, WHERE; {
+long fPUT(long OBJECT, long WHERE, long PVAL) {
 long PUT;
 
 /*  PUT IS THE SAME AS MOVE, EXCEPT IT RETURNS A VALUE USED TO SET UP THE
@@ -644,7 +646,7 @@ long PUT;
 
 #define PUT(OBJECT,WHERE,PVAL) fPUT(OBJECT,WHERE,PVAL)
 #undef CARRY
-void fCARRY(OBJECT,WHERE)long OBJECT, WHERE; {
+void fCARRY(long OBJECT, long WHERE) {
 long TEMP;
 
 /*  START TOTING AN OBJECT, REMOVING IT FROM THE LIST OF THINGS AT ITS FORMER
@@ -671,7 +673,7 @@ L8:	LINK[TEMP]=LINK[OBJECT];
 
 #define CARRY(OBJECT,WHERE) fCARRY(OBJECT,WHERE)
 #undef DROP
-void fDROP(OBJECT,WHERE)long OBJECT, WHERE; {
+void fDROP(long OBJECT, long WHERE) {
 ;
 
 /*  PLACE AN OBJECT AT A GIVEN LOC, PREFIXING IT ONTO THE ATLOC LIST.  DECR
@@ -693,7 +695,7 @@ L2:	if(WHERE <= 0)return;
 
 #define DROP(OBJECT,WHERE) fDROP(OBJECT,WHERE)
 #undef ATDWRF
-long fATDWRF(WHERE)long WHERE; {
+long fATDWRF(long WHERE) {
 long ATDWRF, I;
 
 /*  RETURN THE INDEX OF FIRST DWARF AT THE GIVEN LOCATION, ZERO IF NO DWARF IS
@@ -724,7 +726,7 @@ L2:	ATDWRF=I;
 /*  UTILITY ROUTINES (SETBIT, TSTBIT, RAN, RNDVOC, BUG) */
 
 #undef SETBIT
-long fSETBIT(BIT)long BIT; {
+long fSETBIT(long BIT) {
 long I, SETBIT;
 
 /*  RETURNS 2**BIT FOR USE IN CONSTRUCTING BIT-MASKS. */
@@ -742,7 +744,7 @@ L1:	SETBIT=SETBIT+SETBIT;
 
 #define SETBIT(BIT) fSETBIT(BIT)
 #undef TSTBIT
-long fTSTBIT(MASK,BIT)long BIT, MASK; {
+long fTSTBIT(long MASK, long BIT) {
 long TSTBIT;
 
 /*  RETURNS TRUE IF THE SPECIFIED BIT IS SET IN THE MASK. */
@@ -756,7 +758,7 @@ long TSTBIT;
 
 #define TSTBIT(MASK,BIT) fTSTBIT(MASK,BIT)
 #undef RAN
-long fRAN(RANGE)long RANGE; {
+long fRAN(long RANGE) {
 static long D, R = 0, RAN, T;
 
 /*  SINCE THE RAN FUNCTION IN LIB40 SEEMS TO BE A REAL LOSE, WE'LL USE ONE OF
@@ -781,7 +783,7 @@ L2:	R=MOD(R*1093L+221587L,1048576L);
 
 #define RAN(RANGE) fRAN(RANGE)
 #undef RNDVOC
-long fRNDVOC(CHAR,FORCE)long CHAR, FORCE; {
+long fRNDVOC(long CHAR, long FORCE) {
 long DIV, I, J, RNDVOC;
 
 /*  SEARCHES THE VOCABULARY FOR A WORD WHOSE SECOND CHARACTER IS CHAR, AND
@@ -814,7 +816,7 @@ L8:	ATAB[I]=RNDVOC+J*J;
 
 #define RNDVOC(CHAR,FORCE) fRNDVOC(CHAR,FORCE)
 #undef BUG
-void fBUG(NUM)long NUM; {
+void fBUG(long NUM) {
 
 /*  THE FOLLOWING CONDITIONS ARE CURRENTLY CONSIDERED FATAL BUGS.  NUMBERS < 20
  *  ARE DETECTED WHILE READING THE DATABASE; THE OTHERS OCCUR AT "RUN TIME".
@@ -841,7 +843,7 @@ void fBUG(NUM)long NUM; {
  *	28	INVALID MONTH RETURNED BY DATE FUNCTION
  *	29	TOO MANY PARAMETERS GIVEN TO SETPRM */
 
-	printf("Fatal error %d.  See source code for interpretation.\n",
+	printf("Fatal error %ld.  See source code for interpretation.\n",
 	   NUM);
 	exit(FALSE);
 }
@@ -854,7 +856,7 @@ void fBUG(NUM)long NUM; {
 
 #define BUG(NUM) fBUG(NUM)
 #undef MAPLIN
-void fMAPLIN(FIL)long FIL; {
+void fMAPLIN(long FIL) {
 long I, VAL; static FILE *OPENED = NULL;
 
 /*  READ A LINE OF INPUT, EITHER FROM A FILE (IF FIL=.TRUE.) OR FROM THE
@@ -890,7 +892,7 @@ long I, VAL; static FILE *OPENED = NULL;
 	if(MAP2[1] == 0)MPINIT();
 
 	if(FIL) goto L15;
-	fgets(INLINE+1, 100, stdin);
+	fgets((char *)INLINE+1, 100, stdin);
 	if(feof(stdin)) score(1);
 	 goto L20;
 
@@ -902,7 +904,7 @@ L15:	if(!OPENED){
 		OPENED=fopen("adventure.text","r" /* NOT binary */);
 		if(!OPENED){printf("Can't read adventure.text!\n"); exit(FALSE);}
 		}
-	fgets(INLINE+1,100,OPENED);
+	fgets((char *)INLINE+1,100,OPENED);
 
 L20:	LNLENG=0;
 	/* 25 */ for (I=1; I<=100 && INLINE[I]!=0; I++) {
@@ -921,7 +923,7 @@ L25:	if(INLINE[I] != 0)LNLENG=I;
 
 #define MAPLIN(FIL) fMAPLIN(FIL)
 #undef TYPE
-void fTYPE() {
+void fTYPE(void) {
 long I, VAL;
 
 /*  TYPE THE FIRST "LNLENG" CHARACTERS STORED IN INLINE, MAPPING THEM
@@ -939,7 +941,7 @@ L10:	if(MAP2[1] == 0)MPINIT();
 L20:	{long x = VAL+1; INLINE[I]=MAP2[x];}
 	} /* end loop */
 	{long x = LNLENG+1; INLINE[x]=0;}
-	printf("%s\n",INLINE+1);
+	printf("%s\n",(char *)INLINE+1);
 	return;
 }
 
@@ -947,7 +949,7 @@ L20:	{long x = VAL+1; INLINE[I]=MAP2[x];}
 
 #define TYPE() fTYPE()
 #undef MPINIT
-void fMPINIT() {
+void fMPINIT(void) {
 long FIRST, I, J, LAST, VAL;
 static long RUNS[7][2] = {32,34, 39,46, 65,90, 97,122, 37,37, 48,57, 0,126};
 
@@ -985,8 +987,8 @@ L30:	if(I >= 64)MAP2[VAL]=(I-64)*('B'-'A')+'@';
 
 #define MPINIT() fMPINIT()
 #undef SAVEIO
-void fSAVEIO(OP,IN,ARR)long ARR[], IN, OP; {
-static FILE *F; char NAME[50];
+void fSAVEIO(long OP, long IN, long ARR[]) {
+static FILE *F; char NAME[100];
 
 /*  IF OP=0, ASK FOR A FILE NAME AND OPEN A FILE.  (IF IN=.TRUE., THE FILE IS FOR
  *  INPUT, ELSE OUTPUT.)  IF OP>0, READ/WRITE ARR FROM/INTO THE PREVIOUSLY-OPENED

@@ -1,4 +1,4 @@
-#ifdef __MSDOS__	/* define fopen modes for binary files */
+#if defined(__MSDOS__) || defined(_WIN32) || defined(_WIN64)	/* define fopen modes for binary files */
 #define READ_MODE "rb"
 #define WRITE_MODE "wb"
 #else
@@ -74,7 +74,5 @@ extern long fMOD(long,long);
 #define SAVEIO(OP,IN,ARR) fSAVEIO(OP,IN,ARR)
 extern void fDATIME(long*,long*);
 #define DATIME(D,T) fDATIME(&D,&T)
-extern long fIABS(long);
 #define IABS(N) fIABS(N)
-extern long fMOD(long,long);
 #define MOD(N,M) fMOD(N,M)

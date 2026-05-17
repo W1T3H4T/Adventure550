@@ -1,0 +1,7 @@
+no
+enter
+take keys
+out
+inventory
+quit
+yes

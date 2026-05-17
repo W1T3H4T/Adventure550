@@ -62,3 +62,6 @@ x86/
 # --- Python ---
 __pycache__/
 *.py[cod]
+
+# --- Other ---
+Adv770/

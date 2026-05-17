@@ -3,6 +3,7 @@
 #include "share.h"
 #include "funcs.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 #define TRUE  (0==0)
 #define FALSE (0!=0)
@@ -175,6 +176,7 @@ int initialise(void) {
 	printf("Initialising...\n");
 	if(!quick_init()){raw_init(); report(); quick_save();}
 	finish_init();
+	return(0);
 }
 
 static int raw_init(void) {
@@ -631,6 +633,7 @@ L1993:	SETPRM(1,LINUSE,LINSIZ);
 	SETPRM(19,TRNVLS,TRNSIZ);
 	RSPEAK(267);
 	TYPE0();
+	return(0);
 }
 
 static long init_reading, init_cksum;
@@ -643,7 +646,6 @@ static int quick_init(void) {
 #ifdef AMIGA
 	f = fopen("ram:adventure.data", READ_MODE);
 #else
-	extern char *getenv();
 	char *adv = getenv("ADVENTURE");
 	f = NULL;
 	if(adv)f = fopen(adv,READ_MODE);
@@ -709,7 +711,8 @@ static void quick_item(long *W) {
 }
 
 static void quick_array(long *A, long N) { long I;
-	if(init_reading && fread(A,4,N+1,f) != N+1)printf("Read error!\n");
+	size_t count = (size_t)(N + 1);
+	if(init_reading && fread(A,4,count,f) != count)printf("Read error!\n");
 	for(I=1;I<=N;I++)init_cksum = MOD(init_cksum*13+A[I],60000000);
-	if(!init_reading && fwrite(A,4,N+1,f)!=N+1)printf("Write error!\n");
+	if(!init_reading && fwrite(A,4,count,f) != count)printf("Write error!\n");
 }
